@@ -244,6 +244,38 @@ def create_string(data: bytearray, region: GameRegion) -> str:
     return "".join(secret_chars)
 
 
+def calculate_checksum(secret: bytearray) -> int:
+    """Calculate the checksum for a given secret."""
+    return sum(secret) & 0xF
+
+
+def transform_byte_to_bitstring(byte:int) -> str:
+    """Return a bitstring from a byte integer."""
+    return bin(byte)[2:].rjust(6, "0")
+
+
+def byte_array_to_string(array:bytearray) -> str:
+    return "".join(map(transform_byte_to_bitstring, array))
+
+
+def Byte(integer: str):
+    byteorder = sys.byteorder
+    return int.from_bytes(bytearray(int(integer, 2).to_bytes(1, byteorder)), byteorder)
+
+
+def string_to_byte_array(string: str):
+    secret_length = len(string) // 6 + 1
+    secret = bytearray(secret_length)
+    for x in range(secret_length):
+        multi = x * 6
+        substr = string[multi : multi + 6]
+        if not substr:
+            break
+        else:
+            secret[x] = Byte(substr)
+    return secret
+
+
 class BaseSecret:
     """Base secret class for all secret objects."""
     _CIPHERS = (
@@ -294,3 +326,36 @@ class BaseSecret:
 
     def __hash__(self):
         return hash((self.__game_id, self.__region))
+
+    def __str__(self):
+        return create_string(bytearray(self), self.__region)
+
+    def __eq__(self, other: "BaseSecret"):
+        if type(self) is not type(other):
+            return False
+        return self.game_id == other.game_id and other.region == self.region
+
+    @classmethod
+    def _encode_bytes(cls, data: bytearray, region:GameRegion):
+        """Encode the given data."""
+        cipher_key = data[0] >> 3
+        cipher_pos = cipher_key * 4
+        secret = bytearray(len(data))
+        cipher = cls._CIPHERS[region]
+        for key, value in enumerate(data):
+            secret[key] = value ^ cipher[cipher_pos + key]
+        secret[0] = (secret[0] & 7) | (cipher_key << 3)
+        return secret
+
+    @classmethod
+    def decode_bytes(cls, secret:bytearray | str, region:GameRegion):
+        """Decode a secret string or byte array with a certain region."""
+        bsecret = bytes(secret, "utf-8")
+        cipher = cls._CIPHERS[region]
+        cipher_key = bsecret[0] >> 3
+        cipher_pos = cipher_key * 4
+        decoded_bytes = bytearray(len(bsecret))
+        for key, value in enumerate(bsecret):
+            decoded_bytes[key] = value ^ cipher[cipher_pos + key]
+        decoded_bytes[0] &= 7 | (cipher_key << 3)
+        return decoded_bytes
