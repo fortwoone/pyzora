@@ -1,6 +1,7 @@
 import unicodedata
 import re
 from .enums import *
+from .exceptions import *
 
 _udata_lookup = unicodedata.lookup
 
@@ -145,7 +146,7 @@ _VALID_CHARS = bytes(
      0x29,
      0x00,)
 )
-_VALID_JPCHARS = bytes(map(ord, ('え', 'か', 'く', '0', 'け', 'つ', '1', 'し',
+_VALID_JPCHARS = tuple(map(ord, ('え', 'か', 'く', '0', 'け', 'つ', '1', 'し',
                                  'に', 'ね', 'そ', 'ぺ', '2', 'た', 'せ', 'い',
                                  'て', 'み', 'ほ', 'す', 'う', 'お', 'ら', 'の',
                                  '3', 'ふ', 'さ', 'ざ', 'き', 'ひ', 'わ', 'や',
@@ -199,10 +200,97 @@ _SYMBOL_REGEXES = (
     }
 )
 
-def parse_secret(secret_string:str, region:GameRegion) -> bytearray:
+_VALID_CHAR_SELECT = (_VALID_JPCHARS, _VALID_CHARS)
+
+
+def parse_secret(secret_string: str, region: GameRegion) -> bytearray:
     """Convert a secret string into a byte array.
 
     :param secret_string: The secret string to convert.
-    :param region: The game region to use. Be aware that not setting the correct region before parsing might net you some unexpected errors.
+    :param region: The game region to use. Be aware that not
+    setting the correct region before parsing might net you some unexpected errors.
+    :raise SecretError: if the secret string contains invalid symbols.
     """
+    for key, value in _SYMBOL_REGEXES[region].items():
+        secret_string = re.sub(key, value, secret_string, 0, re.IGNORECASE)
+    secret_length = len(secret_string)  # storing that to avoid iterating over the string twice
+    data = bytearray(secret_length)
+    symbol = 0
+    for pos, value in enumerate(secret_string):
+        try:
+            symbol = _VALID_CHAR_SELECT[region].index(value)
+            if symbol < 0 or symbol > 63:
+                raise SecretError(f"Secret contains invalid value : {value}")
+        except ValueError:
+            # There's a chance the user has used the wrong region
+            raise SecretError(f"Secret contains invalid value : {value}. Perhaps you used the wrong region?")
+        data[pos] = symbol
+    return data
 
+
+def create_string(data: bytearray, region: GameRegion) -> str:
+    """Produces a secret string from a byte array with a given region.
+
+    :param data: The array to convert.
+    :param region: The game region to use during conversion.
+    :raise SecretError: if the byte array contains invalid values."""
+    secret_chars = []
+    for pos, value in enumerate(data):
+        if value > 63:
+            raise SecretError("given data contains invalid values")
+        secret_chars.append(_VALID_CHAR_SELECT[region][value])
+        if pos % 5 == 4:
+            secret_chars.append(" ")
+    return "".join(secret_chars)
+
+
+class BaseSecret:
+    """Base secret class for all secret objects."""
+    _CIPHERS = (
+        # Japan
+        bytes((0x31, 0x09, 0x29, 0x3b, 0x18, 0x3c, 0x17, 0x33,
+               0x35, 0x01, 0x0b, 0x0a, 0x30, 0x21, 0x2d, 0x25,
+               0x20, 0x3a, 0x2f, 0x1e, 0x39, 0x19, 0x2a, 0x06,
+               0x04, 0x15, 0x23, 0x2e, 0x32, 0x28, 0x13, 0x34,
+               0x10, 0x0d, 0x3f, 0x1a, 0x37, 0x0f, 0x3e, 0x36,
+               0x38, 0x02, 0x16, 0x3d, 0x2c, 0x0e, 0x1b, 0x12)),
+        # US/PAL
+        bytes(
+            (21, 35, 46, 4, 13, 63, 26, 16,
+             58, 47, 30, 32, 15, 62, 54, 55,
+             9, 41, 59, 49, 2, 22, 61, 56,
+             40, 19, 52, 50, 1, 11, 10, 53,
+             14, 27, 18, 44, 33, 45, 37, 48,
+             25, 42, 6, 57, 60, 23, 51, 24)
+        )
+    )
+    __game_id = 0  # Can be any possible value between 0 and 32766.
+    __region = GameRegion.US_PAL
+    __required_length__ = 0
+
+    def __set_game_id(self, value: int):
+        if value > 32766 or value < 0:
+            raise SecretError(f"invalid game ID : {value}")
+        self.__game_id = value
+
+    game_id = property(lambda self:self.__game_id, __set_game_id,
+                       doc="""The secret's game ID. A game ID is generated upon creating
+                       a normal save file in either Ages or Seasons, and is kept when using a secret
+                       to start a linked save in the other game. After being first input
+                       through the Labrynna/Holodrum secret, this ID will be compared
+                       against further secret inputs' game IDs, which means that all further
+                       secrets will have to use the same ID.""")
+
+    def __set_region(self, value: GameRegion | int):
+        self.__region = GameRegion(value)
+
+    region = property(lambda self: self.__region, __set_region,
+                      doc="""The secret's region. It's needed to parse correctly
+                      data for a given secret string.""")
+
+    def __bytes__(self):
+        """Convert self to a byte array."""
+        return bytes(20)
+
+    def __hash__(self):
+        return hash((self.__game_id, self.__region))
