@@ -2,6 +2,16 @@ from src.secret import *
 import copy as mod_copy
 
 
+def _integer_string(number: int) -> str:
+    """Return the binary string for an integer."""
+    return bin(number)[2:]  # starting at the third character to skip the prefix
+
+
+def _reverse_string(string: str) -> str:
+    """Return the reversed version of a string."""
+    return "".join(reversed(string))
+
+
 class GameSecret(BaseSecret):
     """A secret used to start a game."""
 
@@ -16,6 +26,7 @@ class GameSecret(BaseSecret):
 
     __args = (
         "game_id",
+        "region",
         "target_game",
         "link_name",
         "child_name",
@@ -53,17 +64,17 @@ class GameSecret(BaseSecret):
                            If you attempt inputting a secret meant for Ages in Seasons,
                            for example, the input will fail.""")
 
-    def __set_hero_quest(self, value:bool):
+    def __set_hero_quest(self, value: bool):
         self.__is_hero_quest = value
 
     is_hero_quest = property(lambda self: self.__is_hero_quest, __set_hero_quest,
                              doc="""A Hero's Secret allows the player to start
                              the game anew and get a special ring.""")
 
-    def __set_linked_game(self, value:bool):
+    def __set_linked_game(self, value: bool):
         self.__is_linked_game = value
 
-    is_linked_game = property(lambda self:self.__is_linked_game, __set_linked_game,
+    is_linked_game = property(lambda self: self.__is_linked_game, __set_linked_game,
                               doc="""If a game is linked, some additional events will happen in the 
                               target game.""")
 
@@ -72,20 +83,20 @@ class GameSecret(BaseSecret):
             raise ValueError(f"incorrect name for Link : {value}")
         self.__link_name = value.strip().ljust(5, "\0")
 
-    link_name = property(lambda self:self.__link_name, __set_link_name,
+    link_name = property(lambda self: self.__link_name, __set_link_name,
                          doc="""Link's name. Takes at most 5 characters to fit in the secret.""")
 
-    def __set_child_name(self, value:str):
+    def __set_child_name(self, value: str):
         self.__child_name = value.strip().ljust(5, "\0")
 
-    child_name = property(lambda self:self.__child_name, __set_child_name,
+    child_name = property(lambda self: self.__child_name, __set_child_name,
                           doc="""Game secrets also store Bipin and Blossom's child's
                           name.""")
 
     def __set_animal(self, value: ObtainedCompanion | int):
         self.__animal = ObtainedCompanion(value)
 
-    animal = property(lambda self:self.__animal, __set_animal,
+    animal = property(lambda self: self.__animal, __set_animal,
                       doc="""The companion Link has obtained.
                       During linked games, this should be set.
                       In linked games, the companion stored in the secret will
@@ -95,7 +106,7 @@ class GameSecret(BaseSecret):
         return self.__behaviour[0]
 
     def __set_behaviour(self, value):
-        self.__behaviour = bytearray((int(value), ))
+        self.__behaviour = bytearray((int(value),))
 
     behaviour = property(__get_behaviour, __set_behaviour,
                          doc="""Bipin and Blossom's child's behaviour is carried over 
@@ -110,13 +121,13 @@ class GameSecret(BaseSecret):
                                    the Friendship Ring from Vasu.""")
 
     @classmethod
-    def load(cls, secret: bytes | bytearray) -> "GameSecret":
+    def load(cls, secret: bytes | bytearray, region: GameRegion) -> "GameSecret":
         """Load a game secret from bytes or a string."""
         if len(secret) != 20:
             raise SecretError("secret must contain exactly 20 bytes")
-        decoded_bytes = cls.decode_bytes(secret)
+        decoded_bytes = cls.decode_bytes(secret, region)
         decoded_secret = byte_array_to_string(decoded_bytes)
-        cloned_bytes = mod_copy.deepcopy(decoded_bytes)
+        cloned_bytes = decoded_bytes.copy()
         cloned_bytes[19] = 0
         checksum = calculate_checksum(cloned_bytes)
         if decoded_bytes[19] & 0xF != checksum & 0xF:
@@ -125,23 +136,80 @@ class GameSecret(BaseSecret):
             )
         del cloned_bytes
         game_id = int("".join(reversed(decoded_secret[5:20])))
-        decoded_array = bitarray(decoded_secret, endian=sys.byteorder)
+        # decoded_array = bitarray(decoded_secret, endian="big")
         if decoded_secret[3:5] != "00":
             raise NotAGameCodeError("given secret is not a game code")
-        is_hero_quest, target_game=(func(itm) for func, itm in zip((bool, int), decoded_array[20:22]))
-        is_linked_game = bool(decoded_array[105])
-        link_name_array=bytearray((
-            Byte_From_Array(reverse_subarray(decoded_array, 22, 8)),
-            Byte_From_Array(reverse_subarray(decoded_array, 38, 8)),
-            Byte_From_Array(reverse_subarray(decoded_array, 60, 8)),
-            Byte_From_Array(reverse_subarray(decoded_array, 77, 8)),
-            Byte_From_Array(reverse_subarray(decoded_array, 89, 8))
+        is_hero_quest, target_game = (func(itm) for func, itm in zip((bool, int), decoded_secret[20:22]))
+        is_linked_game = bool(decoded_secret[105])
+        link_name_array = bytearray((
+            Byte(reverse_substring(decoded_secret, 22, 8)),
+            Byte(reverse_substring(decoded_secret, 38, 8)),
+            Byte(reverse_substring(decoded_secret, 60, 8)),
+            Byte(reverse_substring(decoded_secret, 77, 8)),
+            Byte(reverse_substring(decoded_secret, 89, 8))
         ))
-        link_name = SecretEncoding.GetString(link_name_array)
-        child_name_array=bytearray((
-            Byte_From_Array(reverse_subarray(decoded_array, 30, 8)),
-            Byte_From_Array(reverse_subarray(decoded_array, 46, 8)),
-            Byte_From_Array(reverse_subarray(decoded_array, 68, 8)),
-            Byte_From_Array(reverse_subarray(decoded_array, 97, 8)),
-            Byte_From_Array(reverse_subarray(decoded_array, 106, 8)),
+        link_name = link_name_array.decode("utf-8")
+        child_name_array = bytearray((
+            Byte(reverse_substring(decoded_secret, 30, 8)),
+            Byte(reverse_substring(decoded_secret, 46, 8)),
+            Byte(reverse_substring(decoded_secret, 68, 8)),
+            Byte(reverse_substring(decoded_secret, 97, 8)),
+            Byte(reverse_substring(decoded_secret, 106, 8)),
         ))
+        child_name = child_name_array.decode("utf-8")
+        animal = ObtainedCompanion(Byte(reverse_substring(decoded_secret, 85, 4)))
+        behaviour = Byte(reverse_substring(decoded_secret, 54, 6))
+        was_given_free_ring = bool(decoded_secret[76])
+        return GameSecret(game_id=game_id, region=region,
+                          link_name=link_name, target_game=target_game,
+                          child_name=child_name, animal=animal,
+                          was_given_free_ring=was_given_free_ring,
+                          is_linked_game=is_linked_game,
+                          is_hero_quest=is_hero_quest,
+                          behaviour=behaviour)
+
+    def __bytes__(self):
+        link_byte_array = bytearray(self.link_name, "utf-8")
+        child_byte_array = bytearray(self.child_name, "utf-8")
+        cipher_key = (((self.game_id >> 8) + (self.game_id & 255)) & 7) * 2
+        unencoded_secret = "".join(
+            (
+                _reverse_string(_integer_string(cipher_key).rjust(3, "0")),
+                "00",  # This is to tell the game that we're writing a linking secret.
+                _reverse_string(_integer_string(self.game_id).rjust(15, "0")),
+                str(int(self.is_hero_quest)), str(int(self.target_game)),
+                _reverse_string(_integer_string(link_byte_array[0]).rjust(8, "0")),
+                _reverse_string(_integer_string(child_byte_array[0]).rjust(8, "0")),
+                _reverse_string(_integer_string(link_byte_array[1]).rjust(8, "0")),
+                _reverse_string(_integer_string(child_byte_array[1]).rjust(8, "0")),
+                _reverse_string(_integer_string(self.behaviour).rjust(6, "0")),
+                _reverse_string(_integer_string(link_byte_array[2]).rjust(8, "0")),
+                _reverse_string(_integer_string(child_byte_array[2]).rjust(8, "0")),
+                str(int(self.was_given_free_ring)),
+                _reverse_string(_integer_string(link_byte_array[3]).rjust(8, "0")),
+                _reverse_string(_integer_string(self.animal).rjust(4, "0")),
+                _reverse_string(_integer_string(link_byte_array[4]).rjust(8, "0")),
+                _reverse_string(_integer_string(child_byte_array[3]).rjust(8, "0")),
+                str(int(self.is_linked_game)),
+                _reverse_string(_integer_string(child_byte_array[4]).rjust(8, "0"))
+            )
+        )
+        unencoded_bytes = string_to_byte_array(unencoded_secret)
+        unencoded_bytes[19] = calculate_checksum(unencoded_bytes)
+        secret = self._encode_bytes(unencoded_bytes, self.region)
+        return bytes(secret)
+
+    def __hash__(self):
+        return hash(
+            (
+                self.game_id,
+                self.__region,
+                self.animal,
+                self.behaviour,
+                self.child_name,
+                self.link_name,
+                self.is_hero_quest,
+                self.is_linked_game,
+                self.target_game,
+            )
+        )

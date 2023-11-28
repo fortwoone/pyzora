@@ -202,8 +202,80 @@ _SYMBOL_REGEXES = (
     }
 )
 
-_VALID_CHAR_SELECT = (_VALID_JPCHARS, _VALID_CHARS)
+VALID_CHAR_SELECT = (_VALID_JPCHARS, _VALID_CHARS)
 
+
+_VALID_CHARS_SELECT=(('え', 'か', 'く', '0', 'け', 'つ', '1', 'し',
+                                 'に', 'ね', 'そ', 'ぺ', '2', 'た', 'せ', 'い',
+                                 'て', 'み', 'ほ', 'す', 'う', 'お', 'ら', 'の',
+                                 '3', 'ふ', 'さ', 'ざ', 'き', 'ひ', 'わ', 'や',
+                                 'こ', 'は', 'ゆ', 'よ', 'へ', 'る', 'な', 'と',
+                                 '5', '6', '7', 'を', 'ぷ', 'も', 'め', 'り',
+                                 'ち', 'ま', 'あ', 'ん', 'ぞ', 'れ', '8', 'ご',
+                                 'ど', 'む', 'ぴ', '9', '4', 'ぼ', 'が', 'だ'), ("B",
+                         "D",
+                         "F",
+                         "G",
+                         "H",
+                         "J",
+                         "L",
+                         "M",
+                         "♠",
+                         "♥",
+                         "♦",
+                         "♣",
+                         "#",
+                         "N",
+                         "Q",
+                         "R",
+                         "S",
+                         "T",
+                         "W",
+                         "Y",
+                         "!",
+                         "●",
+                         "▲",
+                         "■",
+                         "+",
+                         "-",
+                         "b",
+                         "d",
+                         "f",
+                         "g",
+                         "h",
+                         "j",
+                         "m",
+                         "$",
+                         "*",
+                         "/",
+                         ":",
+                         "~",
+                         "n",
+                         "q",
+                         "r",
+                         "s",
+                         "t",
+                         "w",
+                         "y",
+                         "?",
+                         "%",
+                         "&",
+                         "(",
+                         "=",
+                         ")",
+                         "2",
+                         "3",
+                         "4",
+                         "5",
+                         "6",
+                         "7",
+                         "8",
+                         "9",
+                         "↑",
+                         "↓",
+                         "←",
+                         "→",
+                         "@",))
 
 def parse_secret(secret_string: str, region: GameRegion) -> bytearray:
     """Convert a secret string into a byte array.
@@ -220,7 +292,7 @@ def parse_secret(secret_string: str, region: GameRegion) -> bytearray:
     symbol = 0
     for pos, value in enumerate(secret_string):
         try:
-            symbol = _VALID_CHAR_SELECT[region].index(value)
+            symbol = _VALID_CHARS_SELECT[region.value].index(value)
             if symbol < 0 or symbol > 63:
                 raise SecretError(f"Secret contains invalid value : {value}")
         except ValueError:
@@ -240,7 +312,7 @@ def create_string(data: bytearray, region: GameRegion) -> str:
     for pos, value in enumerate(data):
         if value > 63:
             raise SecretError("given data contains invalid values")
-        secret_chars.append(_VALID_CHAR_SELECT[region][value])
+        secret_chars.append(_VALID_CHARS_SELECT[region][value])
         if pos % 5 == 4:
             secret_chars.append(" ")
     return "".join(secret_chars)
@@ -290,15 +362,8 @@ def reverse_subarray(array: bitarray, start:int, length:int) -> bitarray:
     return ret
 
 
-def _byte_from_array(array:bitarray):
-    """Return an integer from a bitarray."""
-    assert array.endian()==sys.byteorder
-    return int.from_bytes(array.tobytes(), sys.byteorder)
-
-
-Byte_From_Array = _byte_from_array
-Byte_From_Array.__name__ = "Byte_From_Array"
-Byte_From_Array.__qualname__ = Byte_From_Array.__qualname__.replace("_b", "B").title()
+def reverse_substring(string, start, length):
+    return "".join(reversed(string[start : start + length]))
 
 
 class BaseSecret:
@@ -341,6 +406,22 @@ class BaseSecret:
     def __set_region(self, value: GameRegion | int):
         self.__region = GameRegion(value)
 
+    @classmethod
+    def _get_chars(cls, region: GameRegion, bytes_, byte_index, byte_count, chars=()):
+        for pos in range(byte_index, byte_count):
+            if pos >= len(chars):
+                break
+            b = bytes_[pos] - 0x10
+            if b < 0 or b >= len(_VALID_CHARS_SELECT[region]):
+                chars[pos] = "\0"
+            else:
+                chars[pos] = _VALID_CHARS_SELECT[region][b]
+        return "".join(chars)
+
+    @classmethod
+    def get_string(cls, byte_array: bytearray, region: GameRegion) -> str:
+        return cls._get_chars(region, byte_array, 0, len(byte_array), [""]*5)
+
     region = property(lambda self: self.__region, __set_region,
                       doc="""The secret's region. It's needed to parse correctly
                       data for a given secret string.""")
@@ -353,7 +434,7 @@ class BaseSecret:
         return hash((self.__game_id, self.__region))
 
     def __str__(self):
-        return create_string(bytearray(self), self.__region)
+        return create_string(bytearray(bytes(self)), self.__region)
 
     def __eq__(self, other: "BaseSecret"):
         if type(self) is not type(other):
@@ -375,8 +456,11 @@ class BaseSecret:
     @classmethod
     def decode_bytes(cls, secret:bytearray | str, region:GameRegion):
         """Decode a secret string or byte array with a certain region."""
-        bsecret = bytes(secret, "utf-8")
-        cipher = cls._CIPHERS[region]
+        if isinstance(secret, str):
+            bsecret = bytes(secret, "utf-8")
+        else:
+            bsecret = bytes(secret)
+        cipher = cls._CIPHERS[region.value]
         cipher_key = bsecret[0] >> 3
         cipher_pos = cipher_key * 4
         decoded_bytes = bytearray(len(bsecret))
