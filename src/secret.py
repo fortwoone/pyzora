@@ -1,7 +1,9 @@
 import unicodedata
 import re
+import sys
 from .enums import *
 from .exceptions import *
+from bitarray import bitarray
 
 _udata_lookup = unicodedata.lookup
 
@@ -258,9 +260,14 @@ def byte_array_to_string(array:bytearray) -> str:
     return "".join(map(transform_byte_to_bitstring, array))
 
 
-def Byte(integer: str):
+def _byte(integer: str):
     byteorder = sys.byteorder
     return int.from_bytes(bytearray(int(integer, 2).to_bytes(1, byteorder)), byteorder)
+
+
+Byte = _byte  # Name aliasing since these functions need to act as a class
+Byte.__name__ = "Byte"
+Byte.__qualname__ = Byte.__qualname__.replace("_b", "B")
 
 
 def string_to_byte_array(string: str):
@@ -274,6 +281,24 @@ def string_to_byte_array(string: str):
         else:
             secret[x] = Byte(substr)
     return secret
+
+
+def reverse_subarray(array: bitarray, start:int, length:int) -> bitarray:
+    """Return a reversed subportion of the given bitarray."""
+    ret=array[start:start+length]
+    ret.reverse()
+    return ret
+
+
+def _byte_from_array(array:bitarray):
+    """Return an integer from a bitarray."""
+    assert array.endian()==sys.byteorder
+    return int.from_bytes(array.tobytes(), sys.byteorder)
+
+
+Byte_From_Array = _byte_from_array
+Byte_From_Array.__name__ = "Byte_From_Array"
+Byte_From_Array.__qualname__ = Byte_From_Array.__qualname__.replace("_b", "B").title()
 
 
 class BaseSecret:

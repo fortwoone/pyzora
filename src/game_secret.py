@@ -91,4 +91,57 @@ class GameSecret(BaseSecret):
                       In linked games, the companion stored in the secret will
                       recognise Link and give him his flute again.""")
 
+    def __get_behaviour(self):
+        return self.__behaviour[0]
 
+    def __set_behaviour(self, value):
+        self.__behaviour = bytearray((int(value), ))
+
+    behaviour = property(__get_behaviour, __set_behaviour,
+                         doc="""Bipin and Blossom's child's behaviour is carried over 
+                         through secrets. The same length restrictions as for Link's name
+                         apply for the kid's name.""")
+
+    def __set_free_ring_given(self, value: bool):
+        self.__was_given_free_ring = value
+
+    was_given_free_ring = property(lambda self: self.__was_given_free_ring, __set_free_ring_given,
+                                   doc="""This should be set if the player has already received
+                                   the Friendship Ring from Vasu.""")
+
+    @classmethod
+    def load(cls, secret: bytes | bytearray) -> "GameSecret":
+        """Load a game secret from bytes or a string."""
+        if len(secret) != 20:
+            raise SecretError("secret must contain exactly 20 bytes")
+        decoded_bytes = cls.decode_bytes(secret)
+        decoded_secret = byte_array_to_string(decoded_bytes)
+        cloned_bytes = mod_copy.deepcopy(decoded_bytes)
+        cloned_bytes[19] = 0
+        checksum = calculate_checksum(cloned_bytes)
+        if decoded_bytes[19] & 0xF != checksum & 0xF:
+            raise ChecksumError(
+                f"checksum ({checksum}) does not match expected value({decoded_bytes[19]})"
+            )
+        del cloned_bytes
+        game_id = int("".join(reversed(decoded_secret[5:20])))
+        decoded_array = bitarray(decoded_secret, endian=sys.byteorder)
+        if decoded_secret[3:5] != "00":
+            raise NotAGameCodeError("given secret is not a game code")
+        is_hero_quest, target_game=(func(itm) for func, itm in zip((bool, int), decoded_array[20:22]))
+        is_linked_game = bool(decoded_array[105])
+        link_name_array=bytearray((
+            Byte_From_Array(reverse_subarray(decoded_array, 22, 8)),
+            Byte_From_Array(reverse_subarray(decoded_array, 38, 8)),
+            Byte_From_Array(reverse_subarray(decoded_array, 60, 8)),
+            Byte_From_Array(reverse_subarray(decoded_array, 77, 8)),
+            Byte_From_Array(reverse_subarray(decoded_array, 89, 8))
+        ))
+        link_name = SecretEncoding.GetString(link_name_array)
+        child_name_array=bytearray((
+            Byte_From_Array(reverse_subarray(decoded_array, 30, 8)),
+            Byte_From_Array(reverse_subarray(decoded_array, 46, 8)),
+            Byte_From_Array(reverse_subarray(decoded_array, 68, 8)),
+            Byte_From_Array(reverse_subarray(decoded_array, 97, 8)),
+            Byte_From_Array(reverse_subarray(decoded_array, 106, 8)),
+        ))
