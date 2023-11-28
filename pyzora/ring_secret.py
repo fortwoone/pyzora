@@ -95,7 +95,7 @@ class RingSecret(BaseSecret):
         unencoded_secret = (
                 reverse_string(integer_string(cipher_key).rjust(3, "0")) + "01"
         )
-        secret_strings = (
+        secret_strings = map(reverse_string, (
             integer_string(self.game_id).rjust(15, "0"),
             integer_string(ring_row2).rjust(8, "0"),
             integer_string(ring_row6).rjust(8, "0"),
@@ -105,10 +105,8 @@ class RingSecret(BaseSecret):
             integer_string(ring_row5).rjust(8, "0"),
             integer_string(ring_row3).rjust(8, "0"),
             integer_string(ring_row7).rjust(8, "0"),
-        )
-        unencoded_secret += "".join(
-            (reverse_string(string) for string in secret_strings)
-        )
+        ))
+        unencoded_secret += "".join(secret_strings)
         unencoded_bytes = string_to_byte_array(unencoded_secret)
         del (
             ring_row1,
@@ -125,3 +123,11 @@ class RingSecret(BaseSecret):
         unencoded_bytes[14] = calculate_checksum(unencoded_bytes)
         secret = self._encode_bytes(unencoded_bytes, self.region)
         return bytes(secret)
+
+    def to_list(self):
+        """Return self as a list of ring types."""
+        return list(filter(lambda tp:tp.integer | self.__rings, RING_TYPES))
+
+    def __hash__(self):
+        return hash((self.__game_id, self.__rings))
+

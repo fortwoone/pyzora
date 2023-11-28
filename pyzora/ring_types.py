@@ -1,15 +1,4 @@
-class RingType:
-    def __init__(self, integer, name, description):
-        self.integer, self.name, self.description = integer, name, description
-
-    def __int__(self):
-        return self.integer
-
-    def __or__(self, other):
-        return int(self) | other
-
-    def __ror__(self, other):
-        return self.__or__(other)
+from more_itertools import *
 
 
 class __NoRingsType:
@@ -41,6 +30,30 @@ class __NoRingsType:
 
 
 NoRings = __NoRingsType()
+
+
+class RingType:
+    def __init__(self, integer, name, description):
+        self.integer, self.name, self.description = integer, name, description
+
+    def __int__(self):
+        return self.integer
+
+    def __or__(self, other):
+        return int(self) | other
+
+    def __ror__(self, other):
+        return self.__or__(other)
+
+    @classmethod
+    def from_integer(cls, integer:int):
+        """Returns the first ring type with the corresponding integer.
+        If nothing matches, NoRings is returned instead."""
+        if integer > int(AllRings):
+            raise ValueError("given value exceeds AllRings' value")
+        elif integer < 0:
+            raise ValueError("given value is negative")
+        return first(filter(lambda tp:integer == tp.integer, RING_TYPES), NoRings)
 
 
 class __AllRingsType:
@@ -136,3 +149,17 @@ ZORA = RingType(0x1000000000000000, "Zora Ring", "Dive without breathing")
 FIST = RingType(0x2000000000000000, "Fist Ring", "Punch when not equipped")
 WHIMSICAL = RingType(0x4000000000000000, "Whimsical Ring", "Sword damage ▼ Sometimes deadly")
 PROTECTION = RingType(0x8000000000000000, "Protection Ring", "Damage taken is always one Heart")
+
+
+RING_TYPES = (FRIENDSHIP, POWER_1, POWER_2, POWER_3, ARMOUR_1,
+              ARMOUR_2, ARMOUR_3, RED, BLUE, GREEN, CURSED, EXPERTS_RING,
+              BLAST_RING, RANG1, GBA_TIME, MAPLES_RING, STEADFAST,
+              PEGASUS, TOSS_RING, HEART1, HEART2, SWIMMERS_RING,
+              CHARGE_RING, LIGHT1, LIGHT2, BOMBERS_RING, GREEN_LUCK,
+              BLUE_LUCK, GOLD_LUCK, RED_LUCK, GREEN_HOLY, BLUE_HOLY,
+              RED_HOLY, SNOWSHOE, ROCS_RING, QUICKSAND, RED_JOY,
+              BLUE_JOY, GOLD_JOY, GREEN_JOY, DISCOVERY, RANG2, OCTO,
+              MOBLIN, LIKE_LIKE, SUBROSIAN, GEN1, SPIN, BOMBPROOF,
+              ENERGY, DOUBLE_EDGED, GBA_NATURE, SLAYER, RUPEE,
+              VICTORY, SIGN, HUNDREDTH, WHISP, GASHA, PEACE, ZORA, FIST,
+              WHIMSICAL, PROTECTION)
