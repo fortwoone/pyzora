@@ -354,16 +354,18 @@ def string_to_byte_array(string: str):
     return secret
 
 
-def reverse_subarray(array: bitarray, start:int, length:int) -> bitarray:
-    """Return a reversed subportion of the given bitarray."""
-    ret=array[start:start+length]
-    ret.reverse()
-    return ret
-
-
 def reverse_substring(string, start, length):
     return "".join(reversed(string[start : start + length]))
 
+
+def integer_string(number: int) -> str:
+    """Return the binary string for an integer."""
+    return bin(number)[2:]  # starting at the third character to skip the prefix
+
+
+def reverse_string(string: str) -> str:
+    """Return the reversed version of a string."""
+    return "".join(reversed(string))
 
 class BaseSecret:
     """Base secret class for all secret objects."""

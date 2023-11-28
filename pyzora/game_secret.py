@@ -2,16 +2,6 @@ from pyzora.secret import *
 import copy as mod_copy
 
 
-def _integer_string(number: int) -> str:
-    """Return the binary string for an integer."""
-    return bin(number)[2:]  # starting at the third character to skip the prefix
-
-
-def _reverse_string(string: str) -> str:
-    """Return the reversed version of a string."""
-    return "".join(reversed(string))
-
-
 class GameSecret(BaseSecret):
     """A secret used to start a game."""
 
@@ -139,7 +129,7 @@ class GameSecret(BaseSecret):
         # decoded_array = bitarray(decoded_secret, endian="big")
         if decoded_secret[3:5] != "00":
             raise NotAGameCodeError("given secret is not a game code")
-        is_hero_quest, target_game = (func(itm) for func, itm in zip((bool, int), decoded_secret[20:22]))
+        is_hero_quest, target_game = (func(itm) for func, itm in zip(("1".__eq__, int), decoded_secret[20:22]))
         is_linked_game = bool(decoded_secret[105])
         link_name_array = bytearray((
             Byte(reverse_substring(decoded_secret, 22, 8)),
@@ -174,24 +164,24 @@ class GameSecret(BaseSecret):
         cipher_key = (((self.game_id >> 8) + (self.game_id & 255)) & 7) * 2
         unencoded_secret = "".join(
             (
-                _reverse_string(_integer_string(cipher_key).rjust(3, "0")),
+                reverse_string(integer_string(cipher_key).rjust(3, "0")),
                 "00",  # This is to tell the game that we're writing a linking secret.
-                _reverse_string(_integer_string(self.game_id).rjust(15, "0")),
+                reverse_string(integer_string(self.game_id).rjust(15, "0")),
                 str(int(self.is_hero_quest)), str(int(self.target_game)),
-                _reverse_string(_integer_string(link_byte_array[0]).rjust(8, "0")),
-                _reverse_string(_integer_string(child_byte_array[0]).rjust(8, "0")),
-                _reverse_string(_integer_string(link_byte_array[1]).rjust(8, "0")),
-                _reverse_string(_integer_string(child_byte_array[1]).rjust(8, "0")),
-                _reverse_string(_integer_string(self.behaviour).rjust(6, "0")),
-                _reverse_string(_integer_string(link_byte_array[2]).rjust(8, "0")),
-                _reverse_string(_integer_string(child_byte_array[2]).rjust(8, "0")),
+                reverse_string(integer_string(link_byte_array[0]).rjust(8, "0")),
+                reverse_string(integer_string(child_byte_array[0]).rjust(8, "0")),
+                reverse_string(integer_string(link_byte_array[1]).rjust(8, "0")),
+                reverse_string(integer_string(child_byte_array[1]).rjust(8, "0")),
+                reverse_string(integer_string(self.behaviour).rjust(6, "0")),
+                reverse_string(integer_string(link_byte_array[2]).rjust(8, "0")),
+                reverse_string(integer_string(child_byte_array[2]).rjust(8, "0")),
                 str(int(self.was_given_free_ring)),
-                _reverse_string(_integer_string(link_byte_array[3]).rjust(8, "0")),
-                _reverse_string(_integer_string(self.animal).rjust(4, "0")),
-                _reverse_string(_integer_string(link_byte_array[4]).rjust(8, "0")),
-                _reverse_string(_integer_string(child_byte_array[3]).rjust(8, "0")),
+                reverse_string(integer_string(link_byte_array[3]).rjust(8, "0")),
+                reverse_string(integer_string(self.animal).rjust(4, "0")),
+                reverse_string(integer_string(link_byte_array[4]).rjust(8, "0")),
+                reverse_string(integer_string(child_byte_array[3]).rjust(8, "0")),
                 str(int(self.is_linked_game)),
-                _reverse_string(_integer_string(child_byte_array[4]).rjust(8, "0"))
+                reverse_string(integer_string(child_byte_array[4]).rjust(8, "0"))
             )
         )
         unencoded_bytes = string_to_byte_array(unencoded_secret)
