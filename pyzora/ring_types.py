@@ -36,6 +36,9 @@ class RingType:
     def __init__(self, integer, name, description):
         self.integer, self.name, self.description = integer, name, description
 
+    def __repr__(self):
+        return self.name
+
     def __int__(self):
         return self.integer
 
