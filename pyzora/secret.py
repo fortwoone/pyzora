@@ -3,7 +3,6 @@ import re
 import sys
 from .enums import *
 from .exceptions import *
-from bitarray import bitarray
 
 _udata_lookup = unicodedata.lookup
 
@@ -406,22 +405,6 @@ class BaseSecret:
     def __set_region(self, value: GameRegion | int):
         self.__region = GameRegion(value)
 
-    @classmethod
-    def _get_chars(cls, region: GameRegion, bytes_, byte_index, byte_count, chars=()):
-        for pos in range(byte_index, byte_count):
-            if pos >= len(chars):
-                break
-            b = bytes_[pos] - 0x10
-            if b < 0 or b >= len(_VALID_CHARS_SELECT[region]):
-                chars[pos] = "\0"
-            else:
-                chars[pos] = _VALID_CHARS_SELECT[region][b]
-        return "".join(chars)
-
-    @classmethod
-    def get_string(cls, byte_array: bytearray, region: GameRegion) -> str:
-        return cls._get_chars(region, byte_array, 0, len(byte_array), [""]*5)
-
     region = property(lambda self: self.__region, __set_region,
                       doc="""The secret's region. It's needed to parse correctly
                       data for a given secret string.""")
@@ -434,6 +417,13 @@ class BaseSecret:
         return hash((self.__game_id, self.__region))
 
     def __str__(self):
+        """Return a password string from self.
+
+        WARNING : PLEASE NOTE THAT OUTPUT SECRET STRINGS MIGHT
+        BE DIFFERENT FROM THE INPUT SECRET. IN MOST CASES,
+        YOU DON'T NEED TO BOTHER ABOUT IT, SINCE THE INFORMATION STORED
+        WILL BE THE SAME. YOU CAN CHECK WITH AN EQUALITY TEST IF THE
+        OUTPUT IS DIFFERENT."""
         return create_string(bytearray(bytes(self)), self.__region)
 
     def __eq__(self, other: "BaseSecret"):

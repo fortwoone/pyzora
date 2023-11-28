@@ -1,4 +1,4 @@
-from src.secret import *
+from pyzora.secret import *
 import copy as mod_copy
 
 
@@ -83,13 +83,13 @@ class GameSecret(BaseSecret):
             raise ValueError(f"incorrect name for Link : {value}")
         self.__link_name = value.strip().ljust(5, "\0")
 
-    link_name = property(lambda self: self.__link_name, __set_link_name,
+    link_name = property(lambda self: self.__link_name.replace("\0", " "), __set_link_name,
                          doc="""Link's name. Takes at most 5 characters to fit in the secret.""")
 
     def __set_child_name(self, value: str):
         self.__child_name = value.strip().ljust(5, "\0")
 
-    child_name = property(lambda self: self.__child_name, __set_child_name,
+    child_name = property(lambda self: self.__child_name.replace("\0", " "), __set_child_name,
                           doc="""Game secrets also store Bipin and Blossom's child's
                           name.""")
 
@@ -103,7 +103,7 @@ class GameSecret(BaseSecret):
                       recognise Link and give him his flute again.""")
 
     def __get_behaviour(self):
-        return self.__behaviour[0]
+        return ChildBehaviour(self.__behaviour[0])
 
     def __set_behaviour(self, value):
         self.__behaviour = bytearray((int(value),))
