@@ -127,9 +127,9 @@ def parse_secret(secret_string: str, region: GameRegion) -> bytearray:
             symbol = _VALID_CHARS_SELECT[region.value].index(value)
             if symbol < 0 or symbol > 63:
                 raise SecretError(f"Secret contains invalid value : {value}")
-        except ValueError:
+        except ValueError as exc:
             # There's a chance the user has used the wrong region
-            raise SecretError(f"Secret contains invalid value : {value}. Perhaps you used the wrong region?")
+            raise SecretError(f"Secret contains invalid value : {value}. Perhaps you used the wrong region?") from exc
         data[pos] = symbol
     return data
 
@@ -182,8 +182,7 @@ def string_to_byte_array(string: str):
         substr = string[multi: multi + 6]
         if not substr:
             break
-        else:
-            secret[x] = Byte(substr)
+        secret[x] = Byte(substr)
     return secret
 
 

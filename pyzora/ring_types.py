@@ -21,7 +21,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public
 License along with pyzora. If not, see <https://www.gnu.org/licenses/>.
 """
-from more_itertools import *
+from more_itertools import first
 
 
 class __NoRingsType:
@@ -33,8 +33,7 @@ class __NoRingsType:
         if not cls.__INST:
             cls.__INST += 1
             return super().__new__(cls)
-        else:
-            return NoRings
+        return NoRings
 
     def __del__(self):
         self.__class__.__INST -= 1
@@ -56,6 +55,10 @@ NoRings = __NoRingsType()
 
 
 class RingType:
+    """Represents one of the rings scattered in Labrynna and Holodrum.
+
+    RingType instances DO NOT store the modifiers used by the rings when
+    equipped nor their randomisation tiers. You can check this info """
     def __init__(self, integer, name, description):
         self.integer, self.name, self.description = integer, name, description
 
@@ -102,8 +105,7 @@ class __AllRingsType:
         if not cls.__INST:
             cls.__INST += 1
             return super().__new__(cls)
-        else:
-            return AllRings
+        return AllRings
 
     def __del__(self):
         self.__class__.__INST -= 1
