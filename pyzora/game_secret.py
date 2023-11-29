@@ -111,8 +111,12 @@ class GameSecret(BaseSecret):
                                    the Friendship Ring from Vasu.""")
 
     @classmethod
-    def load(cls, secret: bytes | bytearray, region: GameRegion) -> "GameSecret":
+    def load(cls, secret: bytes | bytearray | str, region: GameRegion) -> "GameSecret":
         """Load a game secret from bytes or a string."""
+        if isinstance(secret, str):
+            # Secret string. Parse it before doing anything else.
+            # Allows the user to give the region only once
+            return cls.load(parse_secret(secret, region), region)
         if len(secret) != 20:
             raise SecretError("secret must contain exactly 20 bytes")
         decoded_bytes = cls.decode_bytes(secret, region)
@@ -125,12 +129,11 @@ class GameSecret(BaseSecret):
                 f"checksum ({checksum}) does not match expected value({decoded_bytes[19]})"
             )
         del cloned_bytes
-        game_id = int("".join(reversed(decoded_secret[5:20])))
-        # decoded_array = bitarray(decoded_secret, endian="big")
+        game_id = int("".join(reversed(decoded_secret[5:20])), 2)
         if decoded_secret[3:5] != "00":
             raise NotAGameCodeError("given secret is not a game code")
         is_hero_quest, target_game = (func(itm) for func, itm in zip(("1".__eq__, int), decoded_secret[20:22]))
-        is_linked_game = bool(decoded_secret[105])
+        is_linked_game = bool(int(decoded_secret[105]))
         link_name_array = bytearray((
             Byte(reverse_substring(decoded_secret, 22, 8)),
             Byte(reverse_substring(decoded_secret, 38, 8)),
@@ -149,7 +152,7 @@ class GameSecret(BaseSecret):
         child_name = child_name_array.decode("utf-8")
         animal = ObtainedCompanion(Byte(reverse_substring(decoded_secret, 85, 4)))
         behaviour = Byte(reverse_substring(decoded_secret, 54, 6))
-        was_given_free_ring = bool(decoded_secret[76])
+        was_given_free_ring = bool(int(decoded_secret[76]))
         return GameSecret(game_id=game_id, region=region,
                           link_name=link_name, target_game=target_game,
                           child_name=child_name, animal=animal,

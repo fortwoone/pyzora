@@ -50,7 +50,11 @@ class MemorySecret(BaseSecret):
                     pass
 
     @classmethod
-    def load(cls, secret: bytearray | bytes, region: GameRegion):
+    def load(cls, secret: bytearray | bytes | str, region: GameRegion):
+        if isinstance(secret, str):
+            # Secret string. Parse it before doing anything else.
+            # Allows the user to give the region only once
+            return cls.load(parse_secret(secret, region), region)
         if len(secret) != 5:
             raise SecretError("secret must contain exactly 5 bytes")
         decoded_bytes = cls.decode_bytes(secret, region)

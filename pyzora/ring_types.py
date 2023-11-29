@@ -42,11 +42,22 @@ class RingType:
     def __int__(self):
         return self.integer
 
+    def __and__(self, other):
+        return int(self) & other
+
+    def __rand__(self, other):
+        return self.__and__(other)
+
     def __or__(self, other):
         return int(self) | other
 
     def __ror__(self, other):
         return self.__or__(other)
+
+    def __eq__(self, other):
+        if type(self) is type(other):
+            return self is other
+        return int(self) == int(other)
 
     @classmethod
     def from_integer(cls, integer:int):

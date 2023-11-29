@@ -13,7 +13,7 @@ class RingSecret(BaseSecret):
 
     if FRIENDSHIP in secret:
         do_whatever_you_want()"""
-    __args = ("game_id", "rings", "ring_str")
+    __args = ("game_id", "rings", "ring_str", "region")
     __rings = 0
     __ring_str = ""
 
@@ -54,11 +54,15 @@ class RingSecret(BaseSecret):
         elif item is AllRings:
             return self.rings == int(AllRings)
         else:
-            return item | self.rings
+            return (item & self.rings) == item
 
     @classmethod
-    def load(cls, secret: bytearray | bytes, region: GameRegion):
+    def load(cls, secret: bytearray | bytes | str, region: GameRegion):
         """Load a secret encoded with a certain region."""
+        if isinstance(secret, str):
+            # Secret string. Parse it before doing anything else.
+            # Allows the user to give the region only once
+            return cls.load(parse_secret(secret, region), region)
         if len(secret) != 15:
             raise SecretError("secret is expected to have exactly 15 bytes")
         decoded_bytes = cls.decode_bytes(secret, region)
@@ -80,7 +84,8 @@ class RingSecret(BaseSecret):
                             reverse_substring(decoded_secret, 20, 8),
                             reverse_substring(decoded_secret, 52, 8)))
         rings = int(ring_str, base=2)
-        return RingSecret(game_id=game_id, rings=rings, ring_str=ring_str)
+        return RingSecret(game_id=game_id, rings=rings, ring_str=ring_str,
+                          region=region)
 
     def __bytes__(self):
         ring_row1 = self.rings
