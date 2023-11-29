@@ -20,8 +20,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public
 License along with pyzora. If not, see <https://www.gnu.org/licenses/>.
 """
-from pyzora.secret import *
-from pyzora.ring_types import *
+from pyzora.secret import (BaseSecret, parse_secret, byte_array_to_string,
+                           calculate_checksum, reverse_string, integer_string,
+                           reverse_substring, string_to_byte_array)
+from pyzora.enums import GameRegion
+from pyzora.exceptions import SecretError, ChecksumError, NotARingCodeError
+from pyzora.ring_types import *  # noqa
 
 
 class RingSecret(BaseSecret):
@@ -73,10 +77,9 @@ class RingSecret(BaseSecret):
     def __contains__(self, item):
         if item is NoRings:
             return not self.rings
-        elif item is AllRings:
+        if item is AllRings:
             return self.rings == int(AllRings)
-        else:
-            return (item & self.rings) == item
+        return (item & self.rings) == item
 
     @classmethod
     def load(cls, secret: bytearray | bytes | str, region: GameRegion):
@@ -95,7 +98,7 @@ class RingSecret(BaseSecret):
         if (decoded_bytes[14] & 0xF) != (checksum & 0xF):
             raise ChecksumError(f"checksum {checksum} does not match expected value : {decoded_bytes[14]}")
         if decoded_secret[3] != "0" or decoded_secret[4] != "1":
-            raise NotARingCodeError(f"given secret is not a ring code")
+            raise NotARingCodeError("given secret is not a ring code")
         game_id = int(reverse_substring(decoded_secret, 5, 15))
         ring_str = "".join((reverse_substring(decoded_secret, 36, 8),
                             reverse_substring(decoded_secret, 76, 8),
@@ -157,4 +160,3 @@ class RingSecret(BaseSecret):
 
     def __hash__(self):
         return hash((self.__game_id, self.__rings))
-

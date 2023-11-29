@@ -20,8 +20,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public
 License along with pyzora. If not, see <https://www.gnu.org/licenses/>.
 """
-from pyzora.secret import *
 import copy as mod_copy
+from pyzora.secret import (BaseSecret, parse_secret, Byte, calculate_checksum,
+                           byte_array_to_string, string_to_byte_array, reverse_substring,
+                           integer_string, reverse_string)
+from pyzora.enums import (TargetGame, ObtainedCompanion, ChildBehaviour,
+                          GameRegion)
+from pyzora.exceptions import SecretError, ChecksumError, NotAGameCodeError
 
 
 class GameSecret(BaseSecret):

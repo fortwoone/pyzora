@@ -20,7 +20,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public
 License along with pyzora. If not, see <https://www.gnu.org/licenses/>.
 """
-from pyzora.secret import *
+from pyzora.secret import (BaseSecret, parse_secret, byte_array_to_string,
+                           string_to_byte_array, reverse_substring, integer_string,
+                           calculate_checksum, reverse_string)
+from pyzora.enums import MemoryEnum, GameRegion, TargetGame
+from pyzora.exceptions import SecretError, ChecksumError, NotAMemoryCodeError
 
 
 class MemorySecret(BaseSecret):
@@ -73,6 +77,7 @@ class MemorySecret(BaseSecret):
 
     @classmethod
     def load(cls, secret: bytearray | bytes | str, region: GameRegion):
+        """Load a memory secret from bytes or a string."""
         if isinstance(secret, str):
             # Secret string. Parse it before doing anything else.
             # Allows the user to give the region only once
