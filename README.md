@@ -22,3 +22,36 @@ completed file. The latter NPC will then give the player another code to transfe
 the non-finished file to carry his bonus over. The player might be required to play a minigame
 before getting the return secret.</li>
 </ul>
+
+As you can see, secrets are pretty vital if you want to have the full experience in
+The Legend of Zelda: Oracle of Ages/Seasons. (which is why this library exists, duh).
+
+## What does pyzora provide?
+
+<ul>
+    <li>One class per secret type, with its own attributes and uses</li>
+    <li>Reading and writing secrets of any type in both available game regions (Japan and US. Note that PAL releases use the same encoding as US cartridges)</li>
+    <li>Easy to use</li>
+</ul>
+
+## Okay, but how am I supposed to install this?
+
+Don't worry! It's very simple! You just need to do the good old `pip install pyzora`!
+
+If you want to manually install the library with the source code, follow the steps below:
+
+<ol>
+    <li><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">Clone</a> the repository.</li>
+    <li>Install <a href="https://python.org/downloads">Python</a> 3.10 or above.</li>
+    <li>Run this command to get the dependencies :</li>
+</ol>
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+<ol start="4">
+    <li>You're good to go!</li>
+</ol>
+
+
