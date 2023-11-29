@@ -1,5 +1,4 @@
 import unittest
-
 from pyzora.game_secret import *
 
 

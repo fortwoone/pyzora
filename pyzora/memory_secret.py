@@ -4,7 +4,7 @@ from pyzora.secret import *
 class MemorySecret(BaseSecret):
     """A memory secret to transfer between two NPCS in Holodrum and Labrynna."""
 
-    __args = ("game_id", "game_region", "target_game", "memory", "is_return_secret")
+    __args = ("game_id", "region", "target_game", "memory", "is_return_secret")
     __game_id = 0
     __target_game = TargetGame.AGES
     __memory = MemoryEnum.CLOCKSHOP_OR_KINGZORA
@@ -70,7 +70,7 @@ class MemorySecret(BaseSecret):
         memory = MemoryEnum(int(reverse_substring(decoded_secret, 20, 4), 2))
         target_game = TargetGame(decoded_secret[24] != decoded_secret[25])
         is_return_secret = bool(int(decoded_secret[24]))
-        return MemorySecret(game_id=game_id, memory=memory,
+        return MemorySecret(game_id=game_id, region=region, memory=memory,
                             target_game=target_game, is_return_secret=is_return_secret)
 
     def __bytes__(self):
@@ -92,4 +92,4 @@ class MemorySecret(BaseSecret):
             mask = 3*self.__is_return
         unencoded_bytes = string_to_byte_array(unencoded_secret)
         unencoded_bytes[4] = calculate_checksum(unencoded_bytes) | (mask << 4)
-        return self._encode_bytes(unencoded_bytes, self.region)
+        return bytes(self._encode_bytes(unencoded_bytes, self.region))

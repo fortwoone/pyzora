@@ -203,78 +203,25 @@ _SYMBOL_REGEXES = (
 
 VALID_CHAR_SELECT = (_VALID_JPCHARS, _VALID_CHARS)
 
+_VALID_CHARS_SELECT = (
+    ('え', 'か', 'く', '0', 'け', 'つ', '1', 'し',
+     'に', 'ね', 'そ', 'ぺ', '2', 'た', 'せ', 'い',
+     'て', 'み', 'ほ', 'す', 'う', 'お', 'ら', 'の',
+     '3', 'ふ', 'さ', 'ざ', 'き', 'ひ', 'わ', 'や',
+     'こ', 'は', 'ゆ', 'よ', 'へ', 'る', 'な', 'と',
+     '5', '6', '7', 'を', 'ぷ', 'も', 'め', 'り',
+     'ち', 'ま', 'あ', 'ん', 'ぞ', 'れ', '8', 'ご',
+     'ど', 'む', 'ぴ', '9', '4', 'ぼ', 'が', 'だ'),
+    ("B", "D", "F", "G", "H", "J", "L", "M",
+     "♠", "♥", "♦", "♣", "#", "N", "Q",
+     "R", "S", "T", "W", "Y", "!", "●", "▲",
+     "■", "+", "-", "b", "d", "f", "g", "h",
+     "j", "m", "$", "*", "/", ":", "~", "n",
+     "q", "r", "s", "t", "w", "y", "?", "%", "&",
+     "(", "=", ")", "2", "3", "4", "5", "6", "7",
+     "8", "9", "↑", "↓", "←", "→", "@",)
+)
 
-_VALID_CHARS_SELECT=(('え', 'か', 'く', '0', 'け', 'つ', '1', 'し',
-                                 'に', 'ね', 'そ', 'ぺ', '2', 'た', 'せ', 'い',
-                                 'て', 'み', 'ほ', 'す', 'う', 'お', 'ら', 'の',
-                                 '3', 'ふ', 'さ', 'ざ', 'き', 'ひ', 'わ', 'や',
-                                 'こ', 'は', 'ゆ', 'よ', 'へ', 'る', 'な', 'と',
-                                 '5', '6', '7', 'を', 'ぷ', 'も', 'め', 'り',
-                                 'ち', 'ま', 'あ', 'ん', 'ぞ', 'れ', '8', 'ご',
-                                 'ど', 'む', 'ぴ', '9', '4', 'ぼ', 'が', 'だ'), ("B",
-                         "D",
-                         "F",
-                         "G",
-                         "H",
-                         "J",
-                         "L",
-                         "M",
-                         "♠",
-                         "♥",
-                         "♦",
-                         "♣",
-                         "#",
-                         "N",
-                         "Q",
-                         "R",
-                         "S",
-                         "T",
-                         "W",
-                         "Y",
-                         "!",
-                         "●",
-                         "▲",
-                         "■",
-                         "+",
-                         "-",
-                         "b",
-                         "d",
-                         "f",
-                         "g",
-                         "h",
-                         "j",
-                         "m",
-                         "$",
-                         "*",
-                         "/",
-                         ":",
-                         "~",
-                         "n",
-                         "q",
-                         "r",
-                         "s",
-                         "t",
-                         "w",
-                         "y",
-                         "?",
-                         "%",
-                         "&",
-                         "(",
-                         "=",
-                         ")",
-                         "2",
-                         "3",
-                         "4",
-                         "5",
-                         "6",
-                         "7",
-                         "8",
-                         "9",
-                         "↑",
-                         "↓",
-                         "←",
-                         "→",
-                         "@",))
 
 def parse_secret(secret_string: str, region: GameRegion) -> bytearray:
     """Convert a secret string into a byte array.
@@ -322,12 +269,12 @@ def calculate_checksum(secret: bytearray) -> int:
     return sum(secret) & 0xF
 
 
-def transform_byte_to_bitstring(byte:int) -> str:
+def transform_byte_to_bitstring(byte: int) -> str:
     """Return a bitstring from a byte integer."""
     return bin(byte)[2:].rjust(6, "0")
 
 
-def byte_array_to_string(array:bytearray) -> str:
+def byte_array_to_string(array: bytearray) -> str:
     return "".join(map(transform_byte_to_bitstring, array))
 
 
@@ -346,7 +293,7 @@ def string_to_byte_array(string: str):
     secret = bytearray(secret_length)
     for x in range(secret_length):
         multi = x * 6
-        substr = string[multi : multi + 6]
+        substr = string[multi: multi + 6]
         if not substr:
             break
         else:
@@ -355,7 +302,7 @@ def string_to_byte_array(string: str):
 
 
 def reverse_substring(string, start, length):
-    return "".join(reversed(string[start : start + length]))
+    return "".join(reversed(string[start: start + length]))
 
 
 def integer_string(number: int) -> str:
@@ -366,6 +313,7 @@ def integer_string(number: int) -> str:
 def reverse_string(string: str) -> str:
     """Return the reversed version of a string."""
     return "".join(reversed(string))
+
 
 class BaseSecret:
     """Base secret class for all secret objects."""
@@ -396,7 +344,7 @@ class BaseSecret:
             raise SecretError(f"invalid game ID : {value}")
         self.__game_id = value
 
-    game_id = property(lambda self:self.__game_id, __set_game_id,
+    game_id = property(lambda self: self.__game_id, __set_game_id,
                        doc="""The secret's game ID. A game ID is generated upon creating
                        a normal save file in either Ages or Seasons, and is kept when using a secret
                        to start a linked save in the other game. After being first input
@@ -434,7 +382,7 @@ class BaseSecret:
         return self.game_id == other.game_id and other.region == self.region
 
     @classmethod
-    def _encode_bytes(cls, data: bytearray, region:GameRegion):
+    def _encode_bytes(cls, data: bytearray, region: GameRegion):
         """Encode the given data."""
         cipher_key = data[0] >> 3
         cipher_pos = cipher_key * 4
@@ -445,8 +393,10 @@ class BaseSecret:
         secret[0] = (secret[0] & 7) | (cipher_key << 3)
         return secret
 
+    __repr__ = __str__
+
     @classmethod
-    def decode_bytes(cls, secret:bytearray | str, region:GameRegion):
+    def decode_bytes(cls, secret: bytearray | str, region: GameRegion):
         """Decode a secret string or byte array with a certain region."""
         if isinstance(secret, str):
             bsecret = bytes(secret, "utf-8")
