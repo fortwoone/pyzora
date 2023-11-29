@@ -87,7 +87,7 @@ class GameSecret(BaseSecret):
         self.__is_linked_game = value
 
     is_linked_game = property(lambda self: self.__is_linked_game, __set_linked_game,
-                              doc="""If a game is linked, some additional events will happen in the 
+                              doc="""If a game is linked, some additional events will happen in the
                               target game.""")
 
     def __set_link_name(self, value: str):
@@ -121,7 +121,7 @@ class GameSecret(BaseSecret):
         self.__behaviour = bytearray((int(value),))
 
     behaviour = property(__get_behaviour, __set_behaviour,
-                         doc="""Bipin and Blossom's child's behaviour is carried over 
+                         doc="""Bipin and Blossom's child's behaviour is carried over
                          through secrets. The same length restrictions as for Link's name
                          apply for the kid's name.""")
 
@@ -154,7 +154,8 @@ class GameSecret(BaseSecret):
         game_id = int("".join(reversed(decoded_secret[5:20])), 2)
         if decoded_secret[3:5] != "00":
             raise NotAGameCodeError("given secret is not a game code")
-        is_hero_quest, target_game = (func(itm) for func, itm in zip(("1".__eq__, int), decoded_secret[20:22]))
+        is_hero_quest, target_game = (func(itm) for func, itm in zip(("1".__eq__, int),
+                                                                     decoded_secret[20:22]))
         is_linked_game = bool(int(decoded_secret[105]))
         link_name_array = bytearray((
             Byte(reverse_substring(decoded_secret, 22, 8)),

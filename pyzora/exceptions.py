@@ -24,12 +24,10 @@ License along with pyzora. If not, see <https://www.gnu.org/licenses/>.
 
 class SecretError(Exception):
     """Something is wrong with the secret."""
-    pass
 
 
 class ChecksumError(Exception):
     """Wrong secret checksum."""
-    pass
 
 
 class NotAGameCodeError(SecretError):
