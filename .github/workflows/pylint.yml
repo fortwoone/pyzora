@@ -20,4 +20,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') --disable=too-many-instance-attributes, too-many-locals
+        pylint $(git ls-files '*.py') --disable=too-many-instance-attributes,too-many-locals
