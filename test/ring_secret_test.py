@@ -21,8 +21,8 @@ class RingSecretTest(unittest.TestCase):
                              rings=FRIENDSHIP | POWER_1 | GREEN,
                              ring_str=integer_string(FRIENDSHIP | POWER_1 | GREEN).rjust(64, "0"))
         rsecret_jp = RingSecret(game_id=21437, region=GameRegion.JP,
-                             rings=FRIENDSHIP | POWER_1 | GREEN,
-                             ring_str=integer_string(FRIENDSHIP | POWER_1 | GREEN).rjust(64, "0"))
+                                rings=FRIENDSHIP | POWER_1 | GREEN,
+                                ring_str=integer_string(FRIENDSHIP | POWER_1 | GREEN).rjust(64, "0"))
         self.assertIn(FRIENDSHIP, RingSecret.load(str(rsecret), GameRegion.US_PAL))
         self.assertIn(POWER_1, RingSecret.load(str(rsecret), GameRegion.US_PAL))
         self.assertIn(GREEN, RingSecret.load(str(rsecret), GameRegion.US_PAL))

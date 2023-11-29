@@ -10,7 +10,7 @@ class MemorySecret(BaseSecret):
     __memory = MemoryEnum.CLOCKSHOP_OR_KINGZORA
     __is_return = False
 
-    def __set_memory(self, value:int):
+    def __set_memory(self, value: int):
         if value < 0:
             raise ValueError("expected a positive value")
         self.__memory = MemoryEnum(value)
@@ -19,14 +19,14 @@ class MemorySecret(BaseSecret):
                       doc="""The event tied to this secret. See MemoryEnum for more
                       details.""")
 
-    def __set_target_game(self, value:TargetGame):
+    def __set_target_game(self, value: TargetGame):
         self.__target_game = TargetGame(value)
 
     target_game = property(lambda self: self.__target_game, __set_target_game,
                            doc="""The secret's target game. See GameSecret.target_game
                            for more details.""")
 
-    def __set_return(self, value:bool):
+    def __set_return(self, value: bool):
         if not isinstance(value, (bool, int, float)):
             raise TypeError("expected a boolean value")
         self.__is_return = bool(value)
@@ -41,12 +41,12 @@ class MemorySecret(BaseSecret):
             if kwargs.get(arg) is None:
                 try:
                     setattr(self, arg, args[pos])
-                except Exception:
+                except LookupError:
                     pass
             else:
                 try:
                     setattr(self, arg, kwargs.get(arg))
-                except Exception:
+                except LookupError:
                     pass
 
     @classmethod

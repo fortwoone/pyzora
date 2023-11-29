@@ -38,12 +38,12 @@ class GameSecret(BaseSecret):
             if val is None:
                 try:
                     setattr(self, arg, args[pos])
-                except Exception:
+                except LookupError:
                     pass
             else:
                 try:
                     setattr(self, arg, val)
-                except Exception:
+                except LookupError:
                     pass
 
     def __set_target_game(self, value: TargetGame | int):

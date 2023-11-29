@@ -60,7 +60,7 @@ class RingType:
         return int(self) == int(other)
 
     @classmethod
-    def from_integer(cls, integer:int):
+    def from_integer(cls, integer: int):
         """Returns the first ring type with the corresponding integer.
         If nothing matches, NoRings is returned instead."""
         if integer > int(AllRings):

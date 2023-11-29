@@ -4,7 +4,7 @@ from pyzora.memory_secret import *
 
 class MemorySecretTest(unittest.TestCase):
     def setUp(self):
-        self._SECRET_STRINGS=(
+        self._SECRET_STRINGS = (
             (("ほやあさめ", "んぺさが2"), ("●=q(T", "6NN*@")),
             (("やだうぼが", "ぼ87ぷめ"), ("+mR&■", "→●2?(")),
             (("ほやあわゆ", "んぺさぴえ"), ("●=q3g", "6NNn2")),

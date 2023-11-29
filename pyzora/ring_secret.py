@@ -40,12 +40,12 @@ class RingSecret(BaseSecret):
             if kwargs.get(arg) is None:
                 try:
                     setattr(self, arg, args[pos])
-                except Exception:
+                except LookupError:
                     pass
             else:
                 try:
                     setattr(self, arg, kwargs.get(arg))
-                except Exception:
+                except LookupError:
                     pass
 
     def __contains__(self, item):
@@ -131,7 +131,7 @@ class RingSecret(BaseSecret):
 
     def to_list(self):
         """Return self as a list of ring types."""
-        return list(filter(lambda tp:tp.integer | self.__rings, RING_TYPES))
+        return list(filter(lambda tp: tp in self, RING_TYPES))
 
     def __hash__(self):
         return hash((self.__game_id, self.__rings))

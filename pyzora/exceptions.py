@@ -15,5 +15,6 @@ class NotAGameCodeError(SecretError):
 class NotARingCodeError(SecretError):
     """The given secret is not a ring password."""
 
+
 class NotAMemoryCodeError(SecretError):
     """The given secret is not a memory password."""
