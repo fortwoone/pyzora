@@ -54,4 +54,8 @@ python3 -m pip install -r requirements.txt
     <li>You're good to go!</li>
 </ol>
 
+## I noticed a bug or want to contribute!
 
+Found a bug? Don't panic! Simply head towards the [Issues](https://github.com/fortwoone/pyzora/issues) section in this repository and describe your problem! A solution will be worked on as soon as possible afterwards.
+
+Want to contribute? You can start by forking the project. Once you're done, <a href="https://github.com/fortwoone/pyzora/pulls">open a pull request</a> in the repository, and it'll be reviewed as soon as possible!
