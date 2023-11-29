@@ -25,7 +25,7 @@ from pyzora.secret import (BaseSecret, parse_secret, byte_array_to_string,
                            reverse_substring, string_to_byte_array)
 from pyzora.enums import GameRegion
 from pyzora.exceptions import SecretError, ChecksumError, NotARingCodeError
-from pyzora.ring_types import *  # noqa
+from pyzora.ring_types import *   # pylint: disable=wildcard-import, unused-wildcard-import
 
 
 class RingSecret(BaseSecret):
