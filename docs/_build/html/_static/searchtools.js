@@ -228,7 +228,7 @@ const Search = {
     Search.output = out.appendChild(searchList);
 
     const searchProgress = document.getElementById("search-progress");
-    // Some themes don't use the search progress node
+    // Some _themes don't use the search progress node
     if (searchProgress) {
       searchProgress.innerText = _("Preparing search...");
     }
