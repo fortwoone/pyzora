@@ -1,0 +1,1 @@
+.. image:: _static/pyzora.svg
