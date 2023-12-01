@@ -8,6 +8,12 @@
 Welcome to PyZora's documentation!
 ==================================
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+   :caption: OK, but... what's a "secret"?
+   :caption: Quick Start
+
 PyZora is a library meant for use with secrets from The Legend of Zelda: Oracle of Seasons/Ages (referred to as the Oracles from now on and throughout the docs for convenience).
 
 It provides easy-to-use classes for each secret type, and allows the user to read and
