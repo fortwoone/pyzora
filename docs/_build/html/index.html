@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Welcome to PyZora’s documentation! &#8212; PyZora 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="welcome-to-pyzora-s-documentation">
+<h1>Welcome to PyZora’s documentation!<a class="headerlink" href="#welcome-to-pyzora-s-documentation" title="Link to this heading">¶</a></h1>
+<p>PyZora is a library meant for use with secrets from The Legend of Zelda: Oracle of Seasons/Ages (referred to as the Oracles from now on and throughout the docs for convenience).</p>
+<p>It provides easy-to-use classes for each secret type, and allows the user to read and
+write any type of secret to a string for use with the games.</p>
+</section>
+<section id="ok-but-what-s-a-secret">
+<h1>OK, but… what’s a “secret”?<a class="headerlink" href="#ok-but-what-s-a-secret" title="Link to this heading">¶</a></h1>
+<p>A secret is a password the Oracles use to transfer data. No matter the type, you need to have completed at least one game to use secrets.</p>
+<p>The data differs between each secret type, and there are three different types :</p>
+<ul class="simple">
+<li><p><strong>Game secrets</strong> : these secrets are the most important ones out of them all. They allow players to start Linked Games. Linked Games continue the story from the completed game to the other one, and allow access to the true final boss (Ganon) and ending, as well as some additional events which differ depending on the game you completed first.</p></li>
+<li><p><strong>Ring secrets</strong> : these ones are game-independent. You can use them to transfer your Magic Rings obtained in one game to the other one. To start using ring secrets, you need to talk to Red Snake in Vasu’s shop in the non-complete file once. You can regenerate ring secrets at will if you obtained some more rings, and the ring list in the secret will not overwrite the potential rings you obtained in the destination game (meaning rings transferred through secrets add to your ring list).</p></li>
+<li><p><strong>Memory secrets</strong> : these ones allow players to get items and buffs inaccessible during normal games. Memory secrets are obtained by talking to a specific NPC in one game which only appears after you reach a certain point in the story. You will then have to repeat the secret to a specific NPC in the other game, which will then give you something in return (you might have to play a minigame to get it). Most of the time, it’s another memory secret you’ll have to carry back to the original secret holder to receive your reward, but in some cases, you might get a ring you have to appraise (and transfer back to the non-complete game using a Ring Secret).</p></li>
+</ul>
+</section>
+<section id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h1>
+<p>Nothing is more simple.
+Just type <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyzora</span></code> (or <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyzora</span></code>) in your terminal to install the library in Python.
+Then you’ll be one <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">pyzora</span></code> away from the ability to use it!</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">PyZora</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, fortwoone.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
