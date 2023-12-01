@@ -31,9 +31,3 @@ Nothing is more simple.
 Just type ``pip install pyzora`` (or ``python3 -m pip install pyzora``) in your terminal to install the library in Python.
 Then you'll be one ``import pyzora`` away from the ability to use it!
 
-Contents
-==================================
-
-.. toctree::
-   :maxdepth: 1
-   pyzora.secret <base_secret>
