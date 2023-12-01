@@ -3,6 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+   :caption: OK, but... what's a "secret"?
+   :caption: Quick Start
+
 .. image:: pyzora.svg
 
 Welcome to PyZora's documentation!
