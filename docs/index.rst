@@ -3,12 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents
-   :caption: OK, but... what's a "secret"?
-   :caption: Quick Start
-
 .. image:: pyzora.svg
 
 Welcome to PyZora's documentation!
@@ -36,3 +30,10 @@ Quick Start
 Nothing is more simple.
 Just type ``pip install pyzora`` (or ``python3 -m pip install pyzora``) in your terminal to install the library in Python.
 Then you'll be one ``import pyzora`` away from the ability to use it!
+
+Contents
+==================================
+
+.. toctree::
+   :maxdepth: 1
+   pyzora.secret <base_secret>
