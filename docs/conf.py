@@ -25,7 +25,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'furo'
-html_theme_path = ["themes/furo"]
+html_theme_path = ["./themes/furo"]
 html_logo = "pyzora.svg"
 html_theme_options = {
     'logo_only': True,
