@@ -114,9 +114,13 @@ def parse_secret(secret_string: str, region: GameRegion) -> bytearray:
     """Convert a secret string into a byte array.
 
     :param secret_string: The secret string to convert.
+    :type secret_string: str
     :param region: The game region to use. Be aware that not
     setting the correct region before parsing might net you some unexpected errors.
+    :type region: GameRegion
     :raise SecretError: if the secret string contains invalid symbols.
+    :return: The converted array.
+    :rtype: bytearray
     """
     for key, value in _SYMBOL_REGEXES[region].items():
         secret_string = re.sub(key, value, secret_string, 0, re.IGNORECASE)
@@ -138,8 +142,12 @@ def create_string(data: bytearray, region: GameRegion) -> str:
     """Produces a secret string from a byte array with a given region.
 
     :param data: The array to convert.
+    :type data: bytearray
     :param region: The game region to use during conversion.
-    :raise SecretError: if the byte array contains invalid values."""
+    :type region: GameRegion
+    :raise SecretError: if the byte array contains invalid values.
+    :return: The data converted to a string using the given encoding.
+    :rtype: str"""
     secret_chars = []
     for pos, value in enumerate(data):
         if value > 63:
@@ -151,12 +159,21 @@ def create_string(data: bytearray, region: GameRegion) -> str:
 
 
 def calculate_checksum(secret: bytearray) -> int:
-    """Calculate the checksum for a given secret."""
+    """Calculate the checksum for a given secret.
+    :param secret: The secret a checksum needs to be calculated for.
+    :type secret: bytearray
+    :return: The needed checksum integer.
+    :rtype: int
+    """
     return sum(secret) & 0xF
 
 
 def transform_byte_to_bitstring(byte: int) -> str:
-    """Return a bitstring from a byte integer."""
+    """Return a bitstring from a byte integer.
+    :param byte: The integer to convert.
+    :type byte: int
+    :return: The integer converted to a bitstring.
+    :rtype: str"""
     return bin(byte)[2:].rjust(6, "0")
 
 
@@ -164,14 +181,10 @@ def byte_array_to_string(array: bytearray) -> str:
     return "".join(map(transform_byte_to_bitstring, array))
 
 
-def _byte(integer: str):
+def Byte(integer: str) -> int:
+    """Return a byte integer from a bitstring."""
     byteorder = sys.byteorder
     return int.from_bytes(bytearray(int(integer, 2).to_bytes(1, byteorder)), byteorder)
-
-
-Byte = _byte  # Name aliasing since these functions need to act as a class
-Byte.__name__ = "Byte"
-Byte.__qualname__ = Byte.__qualname__.replace("_b", "B")
 
 
 def string_to_byte_array(string: str):

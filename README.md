@@ -2,6 +2,7 @@
 ## Python decoder library for Zelda OoS/OoA secrets
 
 [![Documentation Status](https://readthedocs.org/projects/pyzora/badge/?version=latest)](https://pyzora.readthedocs.io/en/latest/?badge=latest)
+![license](https://img.shields.io/github/license/fortwoone/pyzora)
 
 This library has been inspired both by Paulygon's password generator for
 The Legend of Zelda: Oracle of Seasons/Ages (referred to as the Oracle games from now on) and Amy Nagle 
