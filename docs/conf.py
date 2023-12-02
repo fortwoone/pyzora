@@ -6,6 +6,7 @@ import sys, os
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+sys.path.insert(0, os.path.abspath('.'))
 
 project = 'PyZora'
 copyright = '2023, fortwoone'
@@ -37,5 +38,3 @@ html_theme_options = {
     'display_version': False,
 }
 html_static_path = ['_static']
-
-sys.path.insert(0, os.path.abspath('../../pyzora'))
