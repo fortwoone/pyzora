@@ -1,6 +1,6 @@
 .. image:: _static/pyzora.svg
 
-:mod:`pyzora.ring_secret`
-
 The RingSecret class
 =================
+
+Related module: :mod:`pyzora.ring_secret`

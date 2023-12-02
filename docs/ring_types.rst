@@ -1,6 +1,7 @@
 .. image:: _static/pyzora.svg
 
-:mod:`pyzora.ring_types`
-
 The RingType class
 =============================
+
+Related module: :mod:`pyzora.ring_types`
+

@@ -5,18 +5,15 @@
 
 .. image:: _static/pyzora.svg
 
-Contents
-==================================
-
 .. toctree::
    :caption: Contents
 
-   base_secret
    enumerations
+   ring_types
+   base_secret
    game_secret
    ring_secret
    memory_secret
-   ring_types
 
 Welcome to PyZora's documentation!
 ==================================

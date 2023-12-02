@@ -1,9 +1,11 @@
 .. image:: _static/pyzora.svg
 
-:mod:`pyzora.enums`
-
 PyZora enumerations
 ===================
 
-.. py:class::ChildKind
+Related module: :mod:`pyzora.enums`
+
+.. py:enum::GameRegion
+
+    ..member::JP
 

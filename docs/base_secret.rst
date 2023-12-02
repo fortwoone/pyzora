@@ -1,6 +1,6 @@
 .. image:: _static/pyzora.svg
 
-:mod:`pyzora.secret`
-
 The BaseSecret class
 =====================
+
+Related module: :mod:`pyzora.secret`
