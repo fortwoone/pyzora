@@ -8,11 +8,14 @@
 Contents
 ==================================
 
-.. index::
-   single: welcome
-   single:whats-a-secret
-   single:quick-start
-
+.. toctree::
+   :caption: Contents
+   base_secret
+   enumerations
+   game_secret
+   ring_secret
+   memory_secret
+   ring_types
 
 Welcome to PyZora's documentation!
 ==================================
