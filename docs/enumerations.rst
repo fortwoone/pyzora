@@ -5,7 +5,7 @@ PyZora enumerations
 
 Related module: :mod:`pyzora.enums`
 
-.. py:enum::GameRegion
+.. class::GameRegion
 
     .. attribute::JP
 

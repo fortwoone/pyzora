@@ -31,13 +31,21 @@ class GameRegion(IntEnum):
 
 
 class TargetGame(IntEnum):
-    """The game targeted by the secret."""
+    """The game targeted by the secret.
+
+    Secrets meant for one game will not work with the other one.
+    This is only relevant for game and memory secrets, since ring secrets are
+    game-independent."""
     AGES = 0
     SEASONS = 1
 
 
 class ObtainedCompanion(IntEnum):
-    """The animal friend tied to this secret."""
+    """The animal friend tied to this secret.
+
+    The NONE value technically is possible to encounter in Hero's Secrets,
+    but its use is otherwise discouraged, bar non-linked secrets.
+    You might end up with unexpected results otherwise."""
     NONE = 0
     RICKY = 0x0b
     DIMITRI = 0x0c
@@ -73,7 +81,7 @@ class RupeesGiven(IntEnum):
     """Represents how many Rupees you gave to Blossom to help her care for
     her child."""
     ONE = 0
-    TEN = 5
+    TEN = 2
     FIFTY = 5
     ONE_HUNDRED_AND_FIFTY = 8
 
