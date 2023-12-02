@@ -1,3 +1,4 @@
+import sys, os
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -36,3 +37,5 @@ html_theme_options = {
     'display_version': False,
 }
 html_static_path = ['_static']
+
+sys.path.insert(0, os.path.abspath('../project'))
