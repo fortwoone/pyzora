@@ -38,4 +38,4 @@ html_theme_options = {
 }
 html_static_path = ['_static']
 
-sys.path.insert(0, os.path.abspath('../project'))
+sys.path.insert(0, os.path.abspath('../pyzora'))
