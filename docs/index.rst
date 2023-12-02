@@ -10,6 +10,7 @@ Contents
 
 .. toctree::
    :caption: Contents
+
    base_secret
    enumerations
    game_secret
