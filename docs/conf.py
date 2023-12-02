@@ -38,5 +38,4 @@ html_theme_options = {
 }
 html_static_path = ['_static']
 
-print(os.getcwd())
-assert "docs" not in os.getcwd()
+os.system("cd ../")
