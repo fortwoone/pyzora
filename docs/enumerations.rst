@@ -1,4 +1,9 @@
-:mod:`pyzora.enums`
 .. image:: _static/pyzora.svg
 
-.. py:class::
+:mod:`pyzora.enums`
+
+PyZora enumerations
+===================
+
+.. py:class::ChildKind
+
