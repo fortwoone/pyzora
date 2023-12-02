@@ -26,13 +26,13 @@ class GameRegion(IntEnum):
     """A secret's game region.
     Note that US/PAL secrets do NOT work with Japanese ROMS,
     and vice-versa."""
+
     JP = 0
+    """Indicates the current operation should be realised with the Japanese ciphers."""
+
     US_PAL = 1
-
-
-GameRegion.JP.__doc__ = """Indicates the current operation should be realised with the Japanese ciphers."""
-GameRegion.US_PAL.__doc__ = """Indicates the current operation should be achieved using the international ciphers (
-US and PAL cartridges use the same characters and encryption-decryption methods)."""
+    """Indicates the current operation should be achieved using the international ciphers (
+    US and PAL cartridges use the same characters and encryption-decryption methods)."""
 
 
 class TargetGame(IntEnum):
