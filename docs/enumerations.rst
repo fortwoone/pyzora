@@ -7,3 +7,4 @@ Related module: :mod:`pyzora.enums`
 
 .. autoclass:: pyzora.enums.GameRegion
     :members:
+    :undoc-members:
