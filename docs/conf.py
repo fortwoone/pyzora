@@ -30,11 +30,13 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-# html_theme_path = ["_themes"]
 html_theme = 'furo'
-html_logo = "pyzora.svg"
+html_logo = "_static/pyzora.svg"
 html_theme_options = {
     'logo_only': True,
     'display_version': False,
 }
 html_static_path = ['_static']
+
+print(os.getcwd())
+assert "docs" not in os.getcwd()
