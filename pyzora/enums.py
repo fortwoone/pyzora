@@ -30,6 +30,11 @@ class GameRegion(IntEnum):
     US_PAL = 1
 
 
+GameRegion.JP.__doc__ = """Indicates the current operation should be realised with the Japanese ciphers."""
+GameRegion.US_PAL.__doc__ = """Indicates the current operation should be achieved using the international ciphers (
+US and PAL cartridges use the same characters and encryption-decryption methods)."""
+
+
 class TargetGame(IntEnum):
     """The game targeted by the secret.
 
