@@ -84,6 +84,15 @@ _Byte = Literal[*range(256)]  # writing all values from 0 to 256 would be slow a
 
 
 def get_behaviour(value: _Byte) -> ChildBehaviour:
+    """Return the behaviour type for a raw integer value.
+
+    :param value: The raw behaviour value.
+    :type value: int
+    :raise ValueError: if the given value is not between 0 and 255.
+    :return: The corresponding child behaviour.
+    :rtype: ChildBehaviour"""
+    if value > 255 or value < 0:
+        raise ValueError(f"integer value is out of bounds : {value}")
     if value == 0:
         return ChildBehaviour.NONE
     if value < 6:
