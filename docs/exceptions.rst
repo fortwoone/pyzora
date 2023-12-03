@@ -5,3 +5,5 @@ PyZora exceptions
 
 .. automodule:: pyzora.exceptions
     :members:
+    :member-order: bysource
+    :show-inheritance:

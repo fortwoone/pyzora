@@ -42,4 +42,4 @@ Then you'll be one ``import pyzora`` away from the ability to use it!
    game_secret
    ring_secret
    memory_secret
-   child_behaviour_tools
+   child_behaviour
