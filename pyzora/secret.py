@@ -115,8 +115,7 @@ def parse_secret(secret_string: str, region: GameRegion) -> bytearray:
 
     :param secret_string: The secret string to convert.
     :type secret_string: str
-    :param region: The game region to use. Be aware that not
-    setting the correct region before parsing might net you some unexpected errors.
+    :param region: The game region to use. Be aware that not setting the correct region before parsing might net you some unexpected errors.
     :type region: GameRegion
     :raise SecretError: if the secret string contains invalid symbols.
     :return: The converted array.
@@ -173,21 +172,38 @@ def transform_byte_to_bitstring(byte: int) -> str:
     :param byte: The integer to convert.
     :type byte: int
     :return: The integer converted to a bitstring.
-    :rtype: str"""
+    :rtype: str
+    :meta private:"""
     return bin(byte)[2:].rjust(6, "0")
 
 
 def byte_array_to_string(array: bytearray) -> str:
+    """Convert a decoded array to a bitstring.
+    :param array: The decoded array.
+    :type array: bytearray
+    :return: The bitstring for this array.
+    :rtype: str
+    :meta private:"""
     return "".join(map(transform_byte_to_bitstring, array))
 
 
 def Byte(integer: str) -> int:
-    """Return a byte integer from a bitstring."""
+    """Return a byte integer from a bitstring.
+    :param integer: The bitstring to convert.
+    :type integer: str
+    :return: The corresponding byte integer.
+    :rtype: int"""
     byteorder = sys.byteorder
     return int.from_bytes(bytearray(int(integer, 2).to_bytes(1, byteorder)), byteorder)
 
 
-def string_to_byte_array(string: str):
+def string_to_byte_array(string: str) -> bytearray:
+    """Convert a bitstring to a byte array.
+    :param string: The bitstring to convert.
+    :type string: str
+    :return: The non-encoded byte array for this string.
+    :rtype: bytearray
+    :meta private:"""
     secret_length = len(string) // 6 + 1
     secret = bytearray(secret_length)
     for x in range(secret_length):
@@ -199,17 +215,44 @@ def string_to_byte_array(string: str):
     return secret
 
 
-def reverse_substring(string, start, length):
+def reverse_substring(string: str, start: int, length: int) -> str:
+    """Return a reversed slice of the given string.
+    :param string: The string to extract the slice from.
+    :type string: str
+    :param start: The start position for the slice to extract.
+    :type start: int
+    :param length: The slice's length.
+    :type length: int
+    :raise ValueError: if either the start or length values are not positive.
+    :return: The reversed substring from the source string.
+    :rtype: str
+    :meta private:"""
+    if start < 0:
+        raise ValueError(f"Expected a positive integer for the slice start, got {start}")
+    if length < 0:
+        raise ValueError(f"length integer must be positive (got {start})")
     return "".join(reversed(string[start: start + length]))
 
 
 def integer_string(number: int) -> str:
-    """Return the binary string for an integer."""
+    """Return the binary string for an integer.
+
+    :param number: The integer to convert.
+    :type number: int
+    :return: The integer's binary string.
+    :rtype: str
+    :meta private:"""
     return bin(number)[2:]  # starting at the third character to skip the prefix
 
 
 def reverse_string(string: str) -> str:
-    """Return the reversed version of a string."""
+    """Return the reversed version of a string.
+
+    :param string: The string to reverse.
+    :type string: str
+    :return: A reversed copy of the source string.
+    :rtype: str
+    :meta private:"""
     return "".join(reversed(string))
 
 
@@ -297,13 +340,20 @@ class BaseSecret:
     __repr__ = __str__
 
     @classmethod
-    def decode_bytes(cls, secret: bytearray | str, region: GameRegion):
-        """Decode a secret string or byte array with a certain region."""
-        if isinstance(secret, str):
+    def decode_bytes(cls, secret: bytearray | str, region: GameRegion) -> bytearray:
+        """Decode a parsed secret string or byte array using a certain region.
+
+        :param secret: The secret to decode, either as a string or a byte array.
+        :type secret: bytearray or str
+        :param region: The region to use.
+        :type region: GameRegion
+        :return: The decoded byte array.
+        :rtype: bytearray"""
+        if isinstance(secret, str):  # depends on the context
             bsecret = bytes(secret, "utf-8")
         else:
             bsecret = bytes(secret)
-        cipher = cls._CIPHERS[region.value]
+        cipher = cls._CIPHERS[region]
         cipher_key = bsecret[0] >> 3
         cipher_pos = cipher_key * 4
         decoded_bytes = bytearray(len(bsecret))
