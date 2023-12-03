@@ -4,6 +4,7 @@
    contain the root `toctree` directive.
 
 .. image:: _static/pyzora.svg
+    :align: center
 
 
 Welcome to PyZora's documentation!

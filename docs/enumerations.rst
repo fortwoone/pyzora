@@ -1,4 +1,5 @@
 .. image:: _static/pyzora.svg
+    :align: center
 
 PyZora enumerations
 ===================
@@ -13,6 +14,7 @@ Related module: :mod:`pyzora.enums`
 
 .. autoclass:: pyzora.enums.MemoryEnum
     :members:
+    :member-order:
 
 .. autoclass:: pyzora.enums.RupeesGiven
     :members:

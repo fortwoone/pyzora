@@ -1,4 +1,5 @@
 .. image:: _static/pyzora.svg
+    :align: center
 
 PyZora enumerations
 ===================
