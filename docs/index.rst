@@ -35,9 +35,11 @@ Then you'll be one ``import pyzora`` away from the ability to use it!
 .. toctree::
    :caption: Contents
 
+   exceptions
    enumerations
    ring_types
    base_secret
    game_secret
    ring_secret
    memory_secret
+   child_behaviour_tools

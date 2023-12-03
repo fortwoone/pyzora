@@ -39,6 +39,7 @@ html_theme_options = {
 html_static_path = ['_static']
 
 
+# Doing this to ensure the module docstrings do not appear in the generated docs
 def remove_module_docstring(app, what, name, obj, options, lines):
     if what == "module":
         del lines[:]

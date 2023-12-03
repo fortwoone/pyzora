@@ -159,6 +159,7 @@ def create_string(data: bytearray, region: GameRegion) -> str:
 
 def calculate_checksum(secret: bytearray) -> int:
     """Calculate the checksum for a given secret.
+
     :param secret: The secret a checksum needs to be calculated for.
     :type secret: bytearray
     :return: The needed checksum integer.
@@ -169,6 +170,7 @@ def calculate_checksum(secret: bytearray) -> int:
 
 def transform_byte_to_bitstring(byte: int) -> str:
     """Return a bitstring from a byte integer.
+
     :param byte: The integer to convert.
     :type byte: int
     :return: The integer converted to a bitstring.
@@ -179,6 +181,7 @@ def transform_byte_to_bitstring(byte: int) -> str:
 
 def byte_array_to_string(array: bytearray) -> str:
     """Convert a decoded array to a bitstring.
+
     :param array: The decoded array.
     :type array: bytearray
     :return: The bitstring for this array.
@@ -189,6 +192,7 @@ def byte_array_to_string(array: bytearray) -> str:
 
 def Byte(integer: str) -> int:
     """Return a byte integer from a bitstring.
+
     :param integer: The bitstring to convert.
     :type integer: str
     :return: The corresponding byte integer.
@@ -199,6 +203,7 @@ def Byte(integer: str) -> int:
 
 def string_to_byte_array(string: str) -> bytearray:
     """Convert a bitstring to a byte array.
+
     :param string: The bitstring to convert.
     :type string: str
     :return: The non-encoded byte array for this string.
@@ -217,6 +222,7 @@ def string_to_byte_array(string: str) -> bytearray:
 
 def reverse_substring(string: str, start: int, length: int) -> str:
     """Return a reversed slice of the given string.
+
     :param string: The string to extract the slice from.
     :type string: str
     :param start: The start position for the slice to extract.
@@ -260,7 +266,10 @@ class BaseSecret:
     """Base secret class for all secret objects.
 
     This class contains all base methods other secret classes can rely on.
-    It should not be instantiated directly."""
+    It should not be instantiated directly.
+
+    This class defines a basic `__hash__` method, but said hash will be different depending on
+    the secret class."""
     _CIPHERS = (
         # Japan
         bytes((0x31, 0x09, 0x29, 0x3b, 0x18, 0x3c, 0x17, 0x33,

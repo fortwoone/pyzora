@@ -24,5 +24,6 @@ from pyzora.game_secret import *
 from pyzora.memory_secret import *
 from pyzora.ring_secret import *
 from pyzora.ring_types import *
+from pyzora.child_behaviour_tools import *
 __version__ = "1.0.0"
 __author__ = "fortwoone"
