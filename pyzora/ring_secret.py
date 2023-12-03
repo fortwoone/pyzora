@@ -49,7 +49,9 @@ class RingSecret(BaseSecret):
         self.__ring_str = bin(int(value))[2:].rjust(64, "0")
 
     rings = property(lambda self: self.__rings, __set_rings,
-                     doc="""Get the rings stored in the secret as an integer.""")
+                     doc="""Get the rings stored in the secret as an integer.
+                     
+                     :type: int, AllRings or NoRings""")
 
     @property
     def ring_count(self):
@@ -78,8 +80,18 @@ class RingSecret(BaseSecret):
         return (item & self.rings) == item
 
     @classmethod
-    def load(cls, secret: bytearray | bytes | str, region: GameRegion):
-        """Load a secret encoded with a certain region."""
+    def load(cls, secret: bytearray | bytes | str, region: GameRegion) -> "RingSecret":
+        """Load a secret encoded with a certain region.
+
+        :param secret: The secret string/byte array to decode (if secret is an instance of str, then it will be parsed prior to loading).
+        :type secret: str or bytearray
+        :param region: The region to use when loading the secret.
+        :type region: GameRegion
+        :raise SecretError: if the given data is not 15 bytes long (only if used with bytes or bytearray, since strings will be parsed and reduced to 15 bytes).
+        :raise NotARingCodeError: if the given data is not for a ring secret.
+        :raise ChecksumError: if the given data's checksum doesn't match the expected one.
+        :return: A secret based on the data contained in secret.
+        :rtype: RingSecret"""
         if isinstance(secret, str):
             # Secret string. Parse it before doing anything else.
             # Allows the user to give the region only once

@@ -39,14 +39,18 @@ class MemorySecret(BaseSecret):
 
     memory = property(lambda self: self.__memory, __set_memory,
                       doc="""The event tied to this secret. See MemoryEnum for more
-                      details.""")
+                      details.
+                      
+                      :type: MemoryEnum""")
 
     def __set_target_game(self, value: TargetGame):
         self.__target_game = TargetGame(value)
 
     target_game = property(lambda self: self.__target_game, __set_target_game,
                            doc="""The secret's target game. See GameSecret.target_game
-                           for more details.""")
+                           for more details.
+                           
+                           :type: TargetGame""")
 
     def __set_return(self, value: bool):
         if not isinstance(value, (bool, int, float)):
@@ -55,7 +59,9 @@ class MemorySecret(BaseSecret):
 
     is_return_secret = property(lambda self: self.__is_return, __set_return,
                                 doc="""Set this if this secret should be returned to the non-completed
-                                file.""")
+                                file.
+                                
+                                :type: bool""")
 
     def __init__(self, *args, **kwargs):
         for pos, arg in enumerate(self.__args):
@@ -72,8 +78,18 @@ class MemorySecret(BaseSecret):
                     pass
 
     @classmethod
-    def load(cls, secret: bytearray | bytes | str, region: GameRegion):
-        """Load a memory secret from bytes or a string."""
+    def load(cls, secret: bytearray | bytes | str, region: GameRegion) -> "MemorySecret":
+        """Load a memory secret from bytes or a string.
+
+        :param secret: The secret string/byte array to decode (if secret is an instance of str, then it will be parsed prior to loading).
+        :type secret: str or bytearray
+        :param region: The region to use when loading the secret.
+        :type region: GameRegion
+        :raise SecretError: if the given data is not 20 bytes long (only if used with bytes or bytearray, since strings will be parsed and reduced to 20 bytes).
+        :raise NotAMemoryCodeError: if the given data is not for a game secret.
+        :raise ChecksumError: if the given data's checksum doesn't match the expected one.
+        :return: A secret based on the data contained in secret.
+        :rtype: MemorySecret"""
         if isinstance(secret, str):
             # Secret string. Parse it before doing anything else.
             # Allows the user to give the region only once

@@ -134,7 +134,7 @@ class GameSecret(BaseSecret):
                       In linked games, the companion stored in the secret will
                       recognise Link and give him his flute again.
                       
-                      :type: Obtained Companion""")
+                      :type: ObtainedCompanion""")
 
     def __get_behaviour(self):
         return int(self.__behaviour[0])
