@@ -26,7 +26,7 @@ class SecretError(Exception):
     """Something is wrong with the secret."""
 
 
-class ChecksumError(Exception):
+class ChecksumError(SecretError):
     """Wrong secret checksum."""
 
 

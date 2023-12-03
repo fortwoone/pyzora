@@ -8,3 +8,4 @@ Related module: :mod:`pyzora.secret`
 .. automodule:: pyzora.secret
     :members:
     :undoc-members:
+    :member-order: bysource
