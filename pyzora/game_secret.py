@@ -78,21 +78,27 @@ class GameSecret(BaseSecret):
                            doc="""The game the secret is meant for.
                            
                            If you attempt inputting a secret meant for Ages in Seasons,
-                           for example, the input will fail.""")
+                           for example, the input will fail.
+                           
+                           :type: TargetGame""")
 
     def __set_hero_quest(self, value: bool):
         self.__is_hero_quest = value
 
     is_hero_quest = property(lambda self: self.__is_hero_quest, __set_hero_quest,
                              doc="""A Hero's Secret allows the player to start
-                             the game anew and get a special ring.""")
+                             the game anew and get a special ring.
+                             
+                             :type: bool""")
 
     def __set_linked_game(self, value: bool):
         self.__is_linked_game = value
 
     is_linked_game = property(lambda self: self.__is_linked_game, __set_linked_game,
                               doc="""If a game is linked, some additional events will happen in the
-                              target game.""")
+                              target game.
+                              
+                              :type: bool""")
 
     def __set_link_name(self, value: str):
         if len(value.strip()) > 5:
@@ -103,7 +109,9 @@ class GameSecret(BaseSecret):
                          doc="""Link's name. Takes at most 5 characters to fit in the secret.
                          
                          If you set this with a value containing spaces, they will be converted
-                         into null characters for compatibility with the secrets.""")
+                         into null characters for compatibility with the secrets.
+                         
+                         :type: str""")
 
     def __set_child_name(self, value: str):
         self.__child_name = value.strip().ljust(5, "\0")
@@ -113,7 +121,9 @@ class GameSecret(BaseSecret):
                           name.
                           
                           If you set this with a value containing spaces, they will be converted
-                          into null characters for compatibility with the secrets.""")
+                          into null characters for compatibility with the secrets.
+                          
+                          :type: str""")
 
     def __set_animal(self, value: ObtainedCompanion | int):
         self.__animal = ObtainedCompanion(value)
@@ -122,27 +132,33 @@ class GameSecret(BaseSecret):
                       doc="""The companion Link has obtained.
                       During linked games, this should be set.
                       In linked games, the companion stored in the secret will
-                      recognise Link and give him his flute again.""")
+                      recognise Link and give him his flute again.
+                      
+                      :type: Obtained Companion""")
 
     def __get_behaviour(self):
         return int(self.__behaviour[0])
 
     def __set_behaviour(self, value):
-        self.__behaviour = bytearray((int(value),))
+        self.__behaviour[0] = value
 
     behaviour = property(__get_behaviour, __set_behaviour,
                          doc="""Bipin and Blossom's child's behaviour is carried over
                          through secrets. 
                          
                          Note that the value stored here is NOT indicative of the child's 
-                         behaviour on its own.""")
+                         behaviour on its own.
+                         
+                         :type: int""")
 
     def __set_free_ring_given(self, value: bool):
         self.__was_given_free_ring = value
 
     was_given_free_ring = property(lambda self: self.__was_given_free_ring, __set_free_ring_given,
                                    doc="""This should be set if the player has already received
-                                   the Friendship Ring from Vasu.""")
+                                   the Friendship Ring from Vasu.
+                                   
+                                   :type: bool""")
 
     @classmethod
     def load(cls, secret: bytes | bytearray | str, region: GameRegion) -> "GameSecret":

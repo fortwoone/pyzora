@@ -303,14 +303,18 @@ class BaseSecret:
                        to start a linked save in the other game. After being first input
                        through the Labrynna/Holodrum secret, this ID will be compared
                        against further secret inputs' game IDs, which means that all further
-                       secrets will have to use the same ID.""")
+                       secrets will have to use the same ID.
+                       
+                       :type: int""")
 
     def __set_region(self, value: GameRegion | int):
         self.__region = GameRegion(value)
 
     region = property(lambda self: self.__region, __set_region,
                       doc="""The secret's region. It's needed to parse correctly
-                      data for a given secret string.""")
+                      data for a given secret string.
+                      
+                      :type: GameRegion""")
 
     def __bytes__(self):
         """Convert self to a byte array."""
