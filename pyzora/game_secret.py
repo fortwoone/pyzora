@@ -134,6 +134,11 @@ class GameSecret(BaseSecret):
                       In linked games, the companion stored in the secret will
                       recognise Link and give him his flute again.
                       
+                      CAUTION: do NOT try to generate linked secrets with ObtainedCompanion.NONE as the animal
+                      friend! While Ages does have a check to prevent you from getting stuck due to the lack of an animal 
+                      friend and gives you Moosh if you input a secret with no animal friend, Seasons doesn't, and you will
+                      get stuck.
+                      
                       :type: ObtainedCompanion""")
 
     def __get_behaviour(self):
