@@ -122,7 +122,7 @@ class MemorySecret(BaseSecret):
         cipher = int(reverse_string(integer_string(cipher).rjust(3, "0")), 2)
         unencoded_secret = "".join((
                 integer_string(cipher).rjust(3, "0"), "11",
-                reverse_string(integer_string(cipher).rjust(15, "0")),
+                reverse_string(integer_string(self.game_id).rjust(15, "0")),
                 reverse_string(integer_string(self.memory).rjust(4, "0"))
         ))
         if self.target_game:
